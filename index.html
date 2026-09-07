@@ -2,2881 +2,2184 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-
 <meta name="viewport"
-      content="width=device-width,
-      initial-scale=1,
-      maximum-scale=1,
-      user-scalable=no">
-
-<meta name="theme-color" content="#f7f9fc">
-
-<title>Spark X | Filter File Sharing Bot</title>
-
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Spark X | Telegram Mini App</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
 <style>
-
 :root{
-    --bg:#f6f8fc;
+    --bg:#f7f8fc;
     --card:#ffffff;
-    --text:#111522;
-    --muted:#70788b;
-    --light:#9ba3b4;
-    --border:#e8ebf2;
-
-    --primary:#635bff;
-    --blue:#3d98ff;
-    --green:#19bd78;
-    --red:#ef5b68;
-
-    --shadow:
-    0 12px 35px rgba(28,38,65,.07);
-
-    --shadow2:
-    0 6px 20px rgba(28,38,65,.055);
-
-    --radius:21px;
+    --text:#111827;
+    --muted:#7b8494;
+    --border:#e9ecf2;
+    --primary:#111827;
+    --blue:#2563eb;
+    --blue-light:#eef4ff;
+    --green:#16a34a;
+    --green-light:#ecfdf3;
+    --danger:#ef4444;
+    --shadow:0 10px 35px rgba(17,24,39,.07);
+    --radius:22px;
 }
-
 *{
+    box-sizing:border-box;
     margin:0;
     padding:0;
-    box-sizing:border-box;
     -webkit-tap-highlight-color:transparent;
 }
-
 html{
     scroll-behavior:smooth;
 }
-
 body{
-    background:
-    linear-gradient(
-        180deg,
-        #fafbfe 0%,
-        #f4f7fb 100%
-    );
-
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
+                 "Segoe UI",Roboto,Arial,sans-serif;
+    background:var(--bg);
     color:var(--text);
-
-    font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "SF Pro Display",
-    "Segoe UI",
-    Roboto,
-    Arial,
-    sans-serif;
-
     min-height:100vh;
     overflow-x:hidden;
 }
-
 button{
-    font-family:inherit;
+    font:inherit;
+    border:0;
+    cursor:pointer;
 }
-
-svg{
-    width:20px;
-    height:20px;
-
-    fill:none;
-    stroke:currentColor;
-    stroke-width:1.8;
-
-    stroke-linecap:round;
-    stroke-linejoin:round;
+a{
+    color:inherit;
+    text-decoration:none;
 }
-
-.background{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    overflow:hidden;
-    z-index:-1;
-}
-
-.glow{
-    position:absolute;
-    width:230px;
-    height:230px;
-    border-radius:50%;
-    filter:blur(75px);
-    opacity:.16;
-    animation:float 9s ease-in-out infinite;
-}
-
-.glow.one{
-    background:#7167ff;
-    top:-100px;
-    right:-80px;
-}
-
-.glow.two{
-    background:#45aaff;
-    bottom:10%;
-    left:-100px;
-    animation-delay:-4s;
-}
-
-@keyframes float{
-    0%,100%{
-        transform:translateY(0) scale(1);
-    }
-    50%{
-        transform:translateY(-25px) scale(1.08);
-    }
-}
-
 .app{
     width:100%;
-    max-width:520px;
+    max-width:680px;
     margin:auto;
-    padding:15px 15px 115px;
+    min-height:100vh;
+    padding-bottom:100px;
+    position:relative;
 }
-
-/* HEADER */
-
+/* Background */
+.bg-orb{
+    position:fixed;
+    width:220px;
+    height:220px;
+    border-radius:50%;
+    filter:blur(70px);
+    opacity:.13;
+    pointer-events:none;
+    z-index:-1;
+}
+.orb1{
+    background:#2563eb;
+    top:-80px;
+    right:-80px;
+}
+.orb2{
+    background:#7c3aed;
+    bottom:80px;
+    left:-120px;
+}
+/* Header */
 .header{
-    height:58px;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    margin-bottom:16px;
+    padding:18px 18px 8px;
 }
-
 .brand{
     display:flex;
     align-items:center;
-    gap:10px;
+    gap:11px;
 }
-
 .logo{
     width:45px;
     height:45px;
-
+    border-radius:15px;
+    background:#111827;
+    color:white;
     display:flex;
     align-items:center;
     justify-content:center;
-
-    color:white;
-
-    border-radius:15px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #6b60ff,
-        #3d9aff
-    );
-
-    box-shadow:
-    0 9px 24px rgba(92,87,240,.22);
+    box-shadow:0 8px 22px rgba(17,24,39,.16);
 }
-
 .logo svg{
-    width:23px;
-    height:23px;
+    width:24px;
+    height:24px;
 }
-
-.brand-name{
-    font-size:15px;
+.brand-text h1{
+    font-size:16px;
     font-weight:800;
+    letter-spacing:-.3px;
 }
-
-.verified{
-    display:inline-flex;
-
-    width:14px;
-    height:14px;
-
-    align-items:center;
-    justify-content:center;
-
-    margin-left:2px;
-
-    border-radius:50%;
-
-    color:white;
-    background:#3b91ff;
-
-    font-size:9px;
-}
-
-.brand-sub{
-    margin-top:3px;
+.brand-text p{
+    font-size:11px;
     color:var(--muted);
-    font-size:10px;
+    margin-top:2px;
 }
-
 .header-actions{
     display:flex;
-    gap:7px;
-}
-
-.icon-button{
-    width:40px;
-    height:40px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    border-radius:13px;
-
-    color:var(--text);
-
-    background:white;
-
-    border:1px solid var(--border);
-
-    box-shadow:var(--shadow2);
-
-    cursor:pointer;
-
-    transition:.2s;
-}
-
-.icon-button:active{
-    transform:scale(.91);
-}
-
-/* HERO */
-
-.hero{
-    position:relative;
-    overflow:hidden;
-
-    padding:24px 20px;
-
-    border-radius:28px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #ffffff,
-        #f6f4ff 55%,
-        #f1f8ff
-    );
-
-    border:1px solid rgba(99,91,255,.10);
-
-    box-shadow:var(--shadow);
-
-    animation:appear .5s ease both;
-}
-
-.hero-orb{
-    position:absolute;
-
-    width:150px;
-    height:150px;
-
-    right:-65px;
-    top:-70px;
-
-    border-radius:50%;
-
-    background:
-    rgba(99,91,255,.10);
-
-    filter:blur(10px);
-}
-
-.hero-content{
-    position:relative;
-    z-index:2;
-}
-
-.welcome{
-    color:var(--muted);
-    font-size:12px;
-    margin-bottom:8px;
-}
-
-.hero h1{
-    font-size:29px;
-    line-height:1.1;
-    letter-spacing:-1px;
-    margin-bottom:10px;
-}
-
-.hero p{
-    max-width:330px;
-
-    color:var(--muted);
-
-    font-size:13px;
-    line-height:1.55;
-}
-
-.status{
-    display:inline-flex;
-
-    align-items:center;
-    gap:7px;
-
-    margin-top:16px;
-
-    padding:7px 10px;
-
-    border-radius:20px;
-
-    color:#0fa667;
-
-    background:rgba(25,189,120,.07);
-
-    border:1px solid rgba(25,189,120,.11);
-
-    font-size:10px;
-    font-weight:700;
-}
-
-.status-dot{
-    width:7px;
-    height:7px;
-
-    border-radius:50%;
-
-    background:var(--green);
-
-    box-shadow:
-    0 0 0 4px rgba(25,189,120,.08),
-    0 0 10px rgba(25,189,120,.45);
-
-    animation:pulse 1.7s infinite;
-}
-
-@keyframes pulse{
-    50%{
-        opacity:.4;
-    }
-}
-
-.primary{
-    width:100%;
-
-    margin-top:16px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
     gap:8px;
-
-    padding:14px;
-
-    border:none;
-    border-radius:15px;
-
-    color:white;
-
-    background:
-    linear-gradient(
-        135deg,
-        #695ef9,
-        #3c98ff
-    );
-
-    box-shadow:
-    0 10px 24px rgba(86,88,238,.20);
-
-    font-size:13px;
-    font-weight:750;
-
-    cursor:pointer;
-
-    transition:.2s;
 }
-
-.primary:active{
-    transform:scale(.97);
-}
-
-/* STATISTICS */
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:9px;
-
-    margin:13px 0 25px;
-}
-
-.stat{
-    padding:14px 7px;
-
-    text-align:center;
-
-    background:white;
-
+.icon-btn{
+    width:42px;
+    height:42px;
+    border-radius:14px;
+    background:var(--card);
     border:1px solid var(--border);
-
-    border-radius:18px;
-
-    box-shadow:var(--shadow2);
-}
-
-.stat-icon{
-    width:31px;
-    height:31px;
-
-    margin:0 auto 7px;
-
     display:flex;
     align-items:center;
     justify-content:center;
-
-    color:var(--primary);
-
-    border-radius:10px;
-
-    background:rgba(99,91,255,.07);
+    box-shadow:0 5px 18px rgba(0,0,0,.035);
 }
-
-.stat-icon svg{
-    width:16px;
-    height:16px;
+.icon-btn svg{
+    width:19px;
+    height:19px;
 }
-
-.stat-value{
-    font-size:15px;
-    font-weight:800;
-}
-
-.stat-label{
-    display:block;
-
-    margin-top:3px;
-
-    color:var(--light);
-
-    font-size:9px;
-}
-
-/* SECTION */
-
+/* Sections */
 .section{
-    margin-top:24px;
+    padding:12px 18px;
 }
-
-.section-header{
+.section-title{
     display:flex;
     align-items:center;
     justify-content:space-between;
-
-    margin-bottom:11px;
+    margin-bottom:12px;
 }
-
-.section-title{
-    font-size:16px;
-    font-weight:780;
+.section-title h2{
+    font-size:17px;
+    font-weight:800;
+    letter-spacing:-.4px;
 }
-
-.section-more{
-    color:var(--light);
+.section-title span{
+    font-size:11px;
+    color:var(--muted);
+}
+/* Hero */
+.hero{
+    margin:14px 18px 8px;
+    background:#111827;
+    color:#fff;
+    border-radius:28px;
+    padding:25px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 18px 45px rgba(17,24,39,.18);
+}
+.hero:before{
+    content:"";
+    position:absolute;
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    background:#2563eb;
+    filter:blur(70px);
+    opacity:.45;
+    right:-80px;
+    top:-70px;
+}
+.hero:after{
+    content:"";
+    position:absolute;
+    width:130px;
+    height:130px;
+    border-radius:50%;
+    background:#7c3aed;
+    filter:blur(65px);
+    opacity:.35;
+    left:-70px;
+    bottom:-80px;
+}
+.hero-content{
+    position:relative;
+    z-index:1;
+}
+.online{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:7px 10px;
+    border-radius:30px;
+    background:rgba(255,255,255,.1);
+    font-size:11px;
+    margin-bottom:18px;
+}
+.online-dot{
+    width:7px;
+    height:7px;
+    background:#4ade80;
+    border-radius:50%;
+    box-shadow:0 0 0 5px rgba(74,222,128,.1);
+}
+.hero h2{
+    font-size:28px;
+    line-height:1.08;
+    letter-spacing:-1.2px;
+    max-width:390px;
+}
+.hero p{
+    color:rgba(255,255,255,.67);
+    font-size:13px;
+    line-height:1.6;
+    margin-top:11px;
+    max-width:420px;
+}
+.primary-btn{
+    margin-top:20px;
+    background:white;
+    color:#111827;
+    padding:13px 17px;
+    border-radius:14px;
+    font-weight:750;
+    font-size:13px;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:.2s;
+}
+.primary-btn:active{
+    transform:scale(.96);
+}
+.primary-btn svg{
+    width:16px;
+}
+/* Welcome */
+.welcome{
+    padding:7px 18px 3px;
+}
+.welcome p{
+    font-size:12px;
+    color:var(--muted);
+}
+.welcome strong{
+    color:var(--text);
+}
+/* Status */
+.status-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:17px;
+    box-shadow:var(--shadow);
+}
+.status-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+.status-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+.status-icon{
+    width:42px;
+    height:42px;
+    border-radius:14px;
+    background:var(--green-light);
+    color:var(--green);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.status-icon svg{
+    width:19px;
+}
+.status-name{
+    font-size:14px;
+    font-weight:750;
+}
+.status-sub{
+    font-size:11px;
+    color:var(--muted);
+    margin-top:3px;
+}
+.status-badge{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    background:var(--green-light);
+    color:var(--green);
+    padding:7px 10px;
+    border-radius:20px;
     font-size:10px;
+    font-weight:750;
 }
-
-/* MENU */
-
-.menu-grid{
+.status-badge span{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:var(--green);
+}
+.refresh-btn{
+    width:100%;
+    margin-top:13px;
+    padding:11px;
+    border-radius:12px;
+    background:#f6f7fa;
+    color:#4b5563;
+    font-size:12px;
+    font-weight:650;
+}
+/* Quick actions */
+.quick-grid{
     display:grid;
     grid-template-columns:repeat(2,1fr);
     gap:10px;
 }
-
-.menu-card{
-    position:relative;
-    overflow:hidden;
-
-    min-height:116px;
-
-    padding:16px;
-
-    background:white;
-
+.quick-card{
+    background:var(--card);
     border:1px solid var(--border);
-
-    border-radius:20px;
-
-    box-shadow:var(--shadow2);
-
-    cursor:pointer;
-
+    border-radius:18px;
+    padding:17px;
+    box-shadow:0 7px 24px rgba(0,0,0,.035);
     transition:.2s;
+    text-align:left;
 }
-
-.menu-card:active{
+.quick-card:active{
     transform:scale(.97);
 }
-
-.menu-card:after{
-    content:"";
-
-    position:absolute;
-
-    width:80px;
-    height:80px;
-
-    right:-45px;
-    bottom:-45px;
-
-    border-radius:50%;
-
-    background:rgba(99,91,255,.05);
-}
-
-.menu-icon{
+.quick-icon{
     width:40px;
     height:40px;
-
+    border-radius:13px;
+    background:var(--blue-light);
+    color:var(--blue);
     display:flex;
     align-items:center;
     justify-content:center;
-
-    margin-bottom:11px;
-
-    color:var(--primary);
-
-    border-radius:13px;
-
-    background:
-    linear-gradient(
-        135deg,
-        rgba(99,91,255,.10),
-        rgba(61,152,255,.07)
-    );
+    margin-bottom:13px;
 }
-
-.menu-icon svg{
+.quick-icon svg{
     width:19px;
-    height:19px;
 }
-
-.menu-card h3{
+.quick-card h3{
     font-size:13px;
-    margin-bottom:5px;
+    font-weight:750;
 }
-
-.menu-card p{
-    color:var(--muted);
+.quick-card p{
     font-size:10px;
-    line-height:1.4;
+    color:var(--muted);
+    margin-top:4px;
 }
-
-/* FEATURE LIST */
-
+/* Features */
 .feature-list{
-    display:grid;
-    gap:9px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
 }
-
 .feature{
     display:flex;
     align-items:center;
-    gap:12px;
-
-    padding:14px;
-
-    background:white;
-
-    border:1px solid var(--border);
-
-    border-radius:17px;
-
-    box-shadow:var(--shadow2);
+    gap:13px;
+    padding:15px;
+    border-bottom:1px solid var(--border);
 }
-
+.feature:last-child{
+    border-bottom:0;
+}
 .feature-icon{
     width:38px;
     height:38px;
-
-    flex-shrink:0;
-
+    border-radius:12px;
+    background:#f5f6f9;
     display:flex;
     align-items:center;
     justify-content:center;
-
-    border-radius:12px;
-
-    color:var(--primary);
-
-    background:rgba(99,91,255,.07);
 }
-
-.feature-text{
+.feature-icon svg{
+    width:18px;
+}
+.feature-content{
     flex:1;
 }
-
-.feature-text strong{
-    display:block;
+.feature-content h3{
     font-size:12px;
+    font-weight:750;
 }
-
-.feature-text span{
-    display:block;
-    margin-top:3px;
+.feature-content p{
+    font-size:10px;
     color:var(--muted);
-    font-size:9px;
+    margin-top:3px;
 }
-
-.feature-check{
+.check{
+    width:23px;
+    height:23px;
+    border-radius:50%;
+    background:var(--green-light);
     color:var(--green);
-}
-
-/* COMMUNITY */
-
-.community{
-    margin-top:12px;
-
-    padding:17px;
-
-    background:white;
-
-    border:1px solid var(--border);
-
-    border-radius:21px;
-
-    box-shadow:var(--shadow2);
-}
-
-.community-top{
     display:flex;
     align-items:center;
+    justify-content:center;
+}
+.check svg{
+    width:12px;
+}
+/* Updates */
+.update-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:17px;
+    box-shadow:var(--shadow);
+}
+.update-top{
+    display:flex;
     gap:12px;
 }
-
-.community-icon{
-    width:43px;
-    height:43px;
-
+.update-icon{
+    width:40px;
+    height:40px;
+    border-radius:13px;
+    background:#f3f0ff;
+    color:#7c3aed;
     display:flex;
     align-items:center;
     justify-content:center;
-
-    color:#388ff4;
-
-    border-radius:14px;
-
-    background:rgba(56,143,244,.08);
 }
-
-.community-text{
+.update-icon svg{
+    width:18px;
+}
+.update-text{
     flex:1;
 }
-
-.community-text h3{
+.update-text h3{
     font-size:13px;
 }
-
-.community-text p{
-    margin-top:4px;
+.update-text p{
+    font-size:11px;
+    line-height:1.5;
     color:var(--muted);
-    font-size:10px;
+    margin-top:4px;
 }
-
+.update-time{
+    font-size:9px;
+    color:#a0a7b3;
+    margin-top:12px;
+}
+/* Community */
+.community{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:18px;
+    box-shadow:var(--shadow);
+}
+.community h3{
+    font-size:15px;
+}
+.community p{
+    font-size:11px;
+    color:var(--muted);
+    line-height:1.5;
+    margin-top:5px;
+}
 .community-buttons{
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:8px;
-
-    margin-top:14px;
+    gap:9px;
+    margin-top:15px;
 }
-
-.community-button{
-    padding:11px 8px;
-
-    border-radius:12px;
-
-    font-size:10px;
-    font-weight:700;
-
-    cursor:pointer;
-}
-
-.channel{
-    color:var(--primary);
-    background:rgba(99,91,255,.07);
-    border:1px solid rgba(99,91,255,.10);
-}
-
-.group{
-    color:#2789ed;
-    background:rgba(39,137,237,.07);
-    border:1px solid rgba(39,137,237,.10);
-}
-
-/* PROFILE */
-
-.profile{
-    display:flex;
-    align-items:center;
-    gap:12px;
-
-    margin-top:12px;
-
-    padding:15px;
-
-    background:white;
-
-    border:1px solid var(--border);
-
-    border-radius:20px;
-
-    box-shadow:var(--shadow2);
-}
-
-.avatar{
-    width:45px;
-    height:45px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    overflow:hidden;
-
-    flex-shrink:0;
-
-    color:#8a92a3;
-
-    border-radius:14px;
-
-    background:#edf0f5;
-}
-
-.avatar img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-.profile-info{
-    flex:1;
-}
-
-.profile-info h3{
-    font-size:13px;
-}
-
-.profile-info p{
-    margin-top:3px;
-    color:var(--muted);
-    font-size:10px;
-}
-
-.online{
-    display:flex;
-    align-items:center;
-    gap:5px;
-
-    padding:7px 9px;
-
-    color:#0fa667;
-
-    background:rgba(25,189,120,.06);
-
-    border-radius:20px;
-
-    font-size:9px;
-}
-
-/* SHARE */
-
-.share-card{
-    display:flex;
-    align-items:center;
-    gap:12px;
-
-    margin-top:12px;
-    padding:16px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #f4f2ff,
-        #eef7ff
-    );
-
-    border:1px solid rgba(99,91,255,.10);
-
-    border-radius:20px;
-
-    cursor:pointer;
-}
-
-.share-icon{
-    width:42px;
-    height:42px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    color:var(--primary);
-
-    background:rgba(99,91,255,.08);
-
+.community-btn{
+    padding:12px 8px;
     border-radius:13px;
+    background:#f6f7fa;
+    font-size:11px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
 }
-
-.share-text{
-    flex:1;
+.community-btn svg{
+    width:15px;
 }
-
-.share-text h3{
-    font-size:13px;
+/* Profile */
+.profile-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:18px;
+    box-shadow:var(--shadow);
 }
-
-.share-text p{
-    margin-top:3px;
+.profile-main{
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+.avatar{
+    width:54px;
+    height:54px;
+    border-radius:18px;
+    object-fit:cover;
+    background:#eef1f6;
+}
+.avatar-placeholder{
+    width:54px;
+    height:54px;
+    border-radius:18px;
+    background:#111827;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    font-weight:800;
+}
+.profile-name{
+    font-size:15px;
+    font-weight:800;
+}
+.profile-username{
+    font-size:11px;
     color:var(--muted);
-    font-size:10px;
+    margin-top:3px;
 }
-
-.share-arrow{
-    color:var(--light);
+.profile-id{
+    margin-top:15px;
+    padding-top:13px;
+    border-top:1px solid var(--border);
+    font-size:11px;
+    color:var(--muted);
 }
-
-/* BOTTOM NAV */
-
+/* Bottom nav */
 .bottom-nav{
     position:fixed;
-
-    z-index:100;
-
+    z-index:50;
     left:50%;
-    bottom:10px;
-
     transform:translateX(-50%);
-
-    width:calc(100% - 26px);
-    max-width:500px;
-
-    height:65px;
-
-    padding:6px;
-
+    bottom:10px;
+    width:calc(100% - 24px);
+    max-width:656px;
+    background:rgba(255,255,255,.94);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:8px;
     display:grid;
     grid-template-columns:repeat(5,1fr);
-
-    background:rgba(255,255,255,.94);
-
-    border:1px solid rgba(220,224,234,.9);
-
-    border-radius:22px;
-
-    backdrop-filter:blur(22px);
-    -webkit-backdrop-filter:blur(22px);
-
-    box-shadow:
-    0 15px 45px rgba(25,35,65,.13);
+    box-shadow:0 15px 45px rgba(17,24,39,.13);
 }
-
-.nav{
-    border:none;
-    background:transparent;
-
-    color:#8b93a6;
-
-    border-radius:16px;
-
+.nav-item{
+    background:none;
+    color:#9aa1ad;
+    padding:8px 3px;
+    border-radius:15px;
     display:flex;
     flex-direction:column;
     align-items:center;
-    justify-content:center;
-
     gap:4px;
-
-    font-size:8px;
-
-    cursor:pointer;
+    font-size:9px;
+    font-weight:650;
+    transition:.2s;
 }
-
-.nav svg{
-    width:18px;
-    height:18px;
+.nav-item svg{
+    width:19px;
+    height:19px;
 }
-
-.nav.active{
-    color:var(--primary);
-    background:rgba(99,91,255,.08);
+.nav-item.active{
+    background:#111827;
+    color:white;
 }
-
-/* OVERLAY */
-
+/* Overlay / Sheet */
 .overlay{
     position:fixed;
     inset:0;
-
-    z-index:150;
-
-    background:rgba(20,25,40,.18);
-
+    background:rgba(17,24,39,.35);
     backdrop-filter:blur(5px);
-    -webkit-backdrop-filter:blur(5px);
-
+    z-index:100;
     opacity:0;
-    pointer-events:none;
-
+    visibility:hidden;
     transition:.25s;
 }
-
 .overlay.show{
     opacity:1;
-    pointer-events:auto;
+    visibility:visible;
 }
-
-/* SHEET */
-
 .sheet{
     position:fixed;
-
-    z-index:160;
-
+    z-index:101;
     left:50%;
     bottom:0;
-
-    width:100%;
-    max-width:520px;
-
-    padding:
-    12px 16px
-    calc(18px + env(safe-area-inset-bottom));
-
-    background:white;
-
-    border-radius:27px 27px 0 0;
-
-    box-shadow:
-    0 -15px 50px rgba(20,30,60,.14);
-
     transform:translate(-50%,105%);
-
-    transition:
-    transform .32s
-    cubic-bezier(.2,.8,.2,1);
-
-    max-height:80vh;
-    overflow-y:auto;
+    width:100%;
+    max-width:680px;
+    background:white;
+    border-radius:28px 28px 0 0;
+    padding:10px 18px 28px;
+    max-height:82vh;
+    overflow:auto;
+    transition:.35s cubic-bezier(.2,.8,.2,1);
 }
-
 .sheet.show{
     transform:translate(-50%,0);
 }
-
-.handle{
-    width:38px;
+.sheet-handle{
+    width:40px;
     height:4px;
-
-    margin:0 auto 15px;
-
     border-radius:10px;
-
-    background:#dfe3eb;
+    background:#dfe2e8;
+    margin:3px auto 18px;
 }
-
-.sheet-title{
-    font-size:19px;
-    font-weight:800;
-}
-
-.sheet-description{
-    margin-top:5px;
-    margin-bottom:14px;
-
-    color:var(--muted);
-
-    font-size:11px;
-    line-height:1.5;
-}
-
-.sheet-list{
-    display:grid;
-    gap:8px;
-}
-
-.sheet-item{
-    width:100%;
-
+.sheet-header{
     display:flex;
+    justify-content:space-between;
     align-items:center;
-    gap:11px;
-
-    padding:13px;
-
-    border-radius:15px;
-
-    background:#f7f8fb;
-
-    border:1px solid #edf0f5;
-
-    color:var(--text);
-
-    text-align:left;
-
-    cursor:pointer;
-
-    transition:.18s;
+    margin-bottom:15px;
 }
-
-.sheet-item:active{
-    transform:scale(.98);
+.sheet-header h2{
+    font-size:18px;
 }
-
-.sheet-item-icon{
+.sheet-close{
     width:35px;
     height:35px;
-
+    border-radius:12px;
+    background:#f4f5f7;
     display:flex;
     align-items:center;
     justify-content:center;
-
-    flex-shrink:0;
-
-    color:var(--primary);
-
-    background:rgba(99,91,255,.08);
-
-    border-radius:11px;
 }
-
+.sheet-close svg{
+    width:16px;
+}
+.sheet-list{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+.sheet-item{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    padding:14px;
+    border:1px solid var(--border);
+    border-radius:16px;
+    background:#fff;
+    text-align:left;
+}
+.sheet-item:active{
+    background:#f7f8fa;
+}
+.sheet-item-icon{
+    width:40px;
+    height:40px;
+    border-radius:13px;
+    background:#f3f5f9;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
 .sheet-item-icon svg{
-    width:17px;
-    height:17px;
+    width:18px;
 }
-
-.sheet-item-content{
+.sheet-item-text{
     flex:1;
 }
-
-.sheet-item-content strong{
+.sheet-item-text strong{
     display:block;
     font-size:12px;
 }
-
-.sheet-item-content span{
+.sheet-item-text span{
     display:block;
+    font-size:10px;
+    color:var(--muted);
     margin-top:3px;
-    color:var(--muted);
-    font-size:9px;
-    line-height:1.4;
 }
-
-.sheet-arrow{
-    color:#a4abba;
+/* FAQ */
+.faq{
+    border:1px solid var(--border);
+    border-radius:16px;
+    overflow:hidden;
 }
-
-.close-sheet{
+.faq-item{
+    border-bottom:1px solid var(--border);
+}
+.faq-item:last-child{
+    border-bottom:0;
+}
+.faq-question{
     width:100%;
-
-    margin-top:10px;
-
-    padding:12px;
-
-    border:none;
-
-    border-radius:13px;
-
-    color:var(--muted);
-
-    background:#f1f3f7;
-
-    font-size:11px;
-    font-weight:700;
-
-    cursor:pointer;
+    background:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    text-align:left;
+    font-size:12px;
+    font-weight:750;
 }
-
-/* TOAST */
-
+.faq-answer{
+    display:none;
+    padding:0 15px 15px;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.6;
+}
+.faq-item.open .faq-answer{
+    display:block;
+}
+.faq-item.open .faq-question svg{
+    transform:rotate(180deg);
+}
+/* Settings */
+.setting{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:15px 0;
+    border-bottom:1px solid var(--border);
+}
+.setting:last-child{
+    border-bottom:0;
+}
+.setting-left{
+    display:flex;
+    gap:12px;
+    align-items:center;
+}
+.setting-icon{
+    width:38px;
+    height:38px;
+    border-radius:12px;
+    background:#f4f5f8;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.setting-icon svg{
+    width:17px;
+}
+.setting-title{
+    font-size:12px;
+    font-weight:750;
+}
+.setting-desc{
+    font-size:10px;
+    color:var(--muted);
+    margin-top:3px;
+}
+.toggle{
+    width:43px;
+    height:25px;
+    background:#d8dce3;
+    border-radius:20px;
+    padding:3px;
+    transition:.2s;
+}
+.toggle span{
+    display:block;
+    width:19px;
+    height:19px;
+    border-radius:50%;
+    background:white;
+    transition:.2s;
+    box-shadow:0 2px 5px rgba(0,0,0,.15);
+}
+.toggle.on{
+    background:#111827;
+}
+.toggle.on span{
+    transform:translateX(18px);
+}
+/* Toast */
 .toast{
     position:fixed;
-
     z-index:300;
-
     left:50%;
-    bottom:91px;
-
+    bottom:92px;
     transform:translate(-50%,20px);
-
-    opacity:0;
-
-    pointer-events:none;
-
-    padding:11px 16px;
-
-    border-radius:13px;
-
+    background:#111827;
     color:white;
-
-    background:rgba(25,29,42,.94);
-
-    box-shadow:0 10px 30px rgba(0,0,0,.16);
-
+    padding:11px 15px;
+    border-radius:13px;
     font-size:11px;
-
-    white-space:nowrap;
-
+    opacity:0;
+    pointer-events:none;
     transition:.25s;
+    white-space:nowrap;
 }
-
 .toast.show{
     opacity:1;
     transform:translate(-50%,0);
 }
-
-@keyframes appear{
+/* Animations */
+.fade-up{
+    animation:fadeUp .5s ease both;
+}
+@keyframes fadeUp{
     from{
         opacity:0;
-        transform:translateY(13px);
+        transform:translateY(12px);
     }
     to{
         opacity:1;
         transform:translateY(0);
     }
 }
-
-@media(max-width:360px){
-
-    .app{
-        padding-left:12px;
-        padding-right:12px;
+.pulse{
+    animation:pulse 2s infinite;
+}
+@keyframes pulse{
+    0%,100%{opacity:1}
+    50%{opacity:.55}
+}
+.spin{
+    animation:spin .7s linear;
+}
+@keyframes spin{
+    to{transform:rotate(360deg)}
+}
+/* Responsive */
+@media(max-width:380px){
+    .hero h2{
+        font-size:25px;
     }
-
-    .hero h1{
-        font-size:26px;
+    .quick-grid{
+        gap:8px;
     }
-
-    .menu-card{
+    .quick-card{
         padding:14px;
     }
-
 }
-
 </style>
 </head>
-
 <body>
-
-<div class="background">
-    <div class="glow one"></div>
-    <div class="glow two"></div>
+<div class="bg-orb orb1"></div>
+<div class="bg-orb orb2"></div>
+<div class="app">
+    <!-- HEADER -->
+    <header class="header">
+        <div class="brand">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M13 2L4 13h6l-1 9 9-12h-6l1-8Z"
+                          stroke="currentColor"
+                          stroke-width="1.8"
+                          stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="brand-text">
+                <h1>Spark X</h1>
+                <p>Filter File Sharing Bot</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="icon-btn" onclick="openSheet('notifications')">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          stroke-linecap="round"/>
+                    <path d="M10 21h4"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          stroke-linecap="round"/>
+                </svg>
+            </button>
+            <button class="icon-btn" onclick="openSheet('allMenu')">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <circle cx="5" cy="12" r="1.5" fill="currentColor"/>
+                    <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+                    <circle cx="19" cy="12" r="1.5" fill="currentColor"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+    <!-- WELCOME -->
+    <div class="welcome fade-up">
+        <p>Welcome back, <strong id="welcomeName">there</strong></p>
+    </div>
+    <!-- HERO -->
+    <section class="hero fade-up">
+        <div class="hero-content">
+            <div class="online">
+                <span class="online-dot pulse"></span>
+                Telegram Connected
+            </div>
+            <h2>Your Telegram assistant.</h2>
+            <p>
+                Fast, simple and reliable access to your Spark X
+                Telegram bot from one clean dashboard.
+            </p>
+            <button class="primary-btn" onclick="openBot()">
+                Open Spark X Bot
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M5 12h13M13 6l6 6-6 6"
+                          stroke="currentColor"
+                          stroke-width="1.8"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    </section>
+    <!-- BOT STATUS -->
+    <section class="section fade-up">
+        <div class="section-title">
+            <h2>Bot Status</h2>
+            <span id="lastChecked">Checking...</span>
+        </div>
+        <div class="status-card">
+            <div class="status-row">
+                <div class="status-left">
+                    <div class="status-icon">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M12 3v3M12 18v3M3 12h3M18 12h3"
+                                  stroke="currentColor"
+                                  stroke-width="1.7"
+                                  stroke-linecap="round"/>
+                            <circle cx="12" cy="12" r="5"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="status-name">Spark X Bot</div>
+                        <div class="status-sub">Telegram service</div>
+                    </div>
+                </div>
+                <div class="status-badge">
+                    <span></span>
+                    Online
+                </div>
+            </div>
+            <button class="refresh-btn" onclick="refreshStatus(this)">
+                Refresh Status
+            </button>
+        </div>
+    </section>
+    <!-- QUICK ACTIONS -->
+    <section class="section fade-up">
+        <div class="section-title">
+            <h2>Quick Actions</h2>
+            <span>Explore</span>
+        </div>
+        <div class="quick-grid">
+            <button class="quick-card" onclick="openSheet('features')">
+                <div class="quick-icon">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M4 6h6v6H4zM14 6h6v6h-6zM4 16h6v4H4zM14 16h6v4h-6z"
+                              stroke="currentColor"
+                              stroke-width="1.6"/>
+                    </svg>
+                </div>
+                <h3>Features</h3>
+                <p>Explore bot capabilities</p>
+            </button>
+            <button class="quick-card" onclick="openSheet('help')">
+                <div class="quick-icon">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="9"
+                                stroke="currentColor"
+                                stroke-width="1.7"/>
+                        <path d="M9.7 9a2.4 2.4 0 1 1 4.1 1.7c-.9.9-1.8 1.2-1.8 2.5"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                        <circle cx="12" cy="16.5" r="1"
+                                fill="currentColor"/>
+                    </svg>
+                </div>
+                <h3>Help Center</h3>
+                <p>FAQs and guidance</p>
+            </button>
+            <button class="quick-card" onclick="shareBot()">
+                <div class="quick-icon">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M12 15V4M8 8l4-4 4 4"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                        <path d="M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <h3>Share Bot</h3>
+                <p>Invite your friends</p>
+            </button>
+            <button class="quick-card" onclick="openSheet('support')">
+                <div class="quick-icon">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M20 11.5a8 8 0 0 1-8 8H7l-3 2v-5a8 8 0 1 1 16-5Z"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3>Support</h3>
+                <p>Get assistance</p>
+            </button>
+        </div>
+    </section>
+    <!-- FEATURES -->
+    <section class="section fade-up">
+        <div class="section-title">
+            <h2>What's Included</h2>
+            <button style="background:none;color:#2563eb;font-size:11px;font-weight:700"
+                    onclick="openSheet('features')">
+                View All
+            </button>
+        </div>
+        <div class="feature-list">
+            <div class="feature">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M13 2L4 13h6l-1 9 9-12h-6l1-8Z"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="feature-content">
+                    <h3>Fast & Reliable</h3>
+                    <p>Designed for quick Telegram interaction</p>
+                </div>
+                <div class="check">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="m7 12 3 3 7-7"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M4 7h16M4 12h16M4 17h10"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="feature-content">
+                    <h3>Smart Filtering</h3>
+                    <p>Simple search and filtering experience</p>
+                </div>
+                <div class="check">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="m7 12 3 3 7-7"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <rect x="4" y="3" width="16" height="18" rx="3"
+                              stroke="currentColor"
+                              stroke-width="1.7"/>
+                        <path d="M8 7h8M8 11h8M8 15h5"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="feature-content">
+                    <h3>Telegram Native</h3>
+                    <p>Built to work naturally inside Telegram</p>
+                </div>
+                <div class="check">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="m7 12 3 3 7-7"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- UPDATE -->
+    <section class="section fade-up">
+        <div class="section-title">
+            <h2>Latest Update</h2>
+            <span>News</span>
+        </div>
+        <div class="update-card">
+            <div class="update-top">
+                <div class="update-icon">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M12 3v12M7 8l5-5 5 5"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                        <path d="M5 15v3a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3v-3"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="update-text">
+                    <h3>Spark X is ready</h3>
+                    <p>
+                        Use the dashboard to quickly access the bot,
+                        community, support and other features.
+                    </p>
+                </div>
+            </div>
+            <div class="update-time">
+                System notification
+            </div>
+        </div>
+    </section>
+    <!-- COMMUNITY -->
+    <section class="section fade-up">
+        <div class="section-title">
+            <h2>Community</h2>
+            <span>Stay connected</span>
+        </div>
+        <div class="community">
+            <h3>Join the Spark X community</h3>
+            <p>
+                Get updates, announcements and support directly
+                through Telegram.
+            </p>
+            <div class="community-buttons">
+                <button class="community-btn" onclick="openChannel()">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M21 4 3 11l7 2 2 7 9-16Z"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linejoin="round"/>
+                        <path d="m10 13 3 3"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                    </svg>
+                    Channel
+                </button>
+                <button class="community-btn" onclick="openGroup()">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M16 20v-1.5a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4V20"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                        <circle cx="9.5" cy="7" r="3"
+                                stroke="currentColor"
+                                stroke-width="1.7"/>
+                        <path d="M17 11a3 3 0 1 0-1-5.8M21 20v-1.5a4 4 0 0 0-3-3.9"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                    </svg>
+                    Group
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- PROFILE -->
+    <section class="section fade-up">
+        <div class="section-title">
+            <h2>Your Telegram Profile</h2>
+        </div>
+        <div class="profile-card">
+            <div class="profile-main">
+                <div id="avatarContainer">
+                    <div class="avatar-placeholder" id="avatarPlaceholder">U</div>
+                </div>
+                <div>
+                    <div class="profile-name" id="profileName">
+                        Telegram User
+                    </div>
+                    <div class="profile-username" id="profileUsername">
+                        @username
+                    </div>
+                </div>
+            </div>
+            <div class="profile-id">
+                Telegram ID:
+                <strong id="telegramId">Not available</strong>
+            </div>
+        </div>
+    </section>
 </div>
-
-
-<main class="app">
-
-<!-- HEADER -->
-
-<header class="header">
-
-    <div class="brand">
-
-        <div class="logo">
-
-            <svg viewBox="0 0 24 24">
-                <rect x="4" y="7" width="16" height="12" rx="3"/>
-                <path d="M12 4v3"/>
-                <circle cx="9" cy="12" r="1"/>
-                <circle cx="15" cy="12" r="1"/>
-                <path d="M9 16h6"/>
-            </svg>
-
-        </div>
-
-        <div>
-
-            <div class="brand-name">
-                Spark X
-                <span class="verified">✓</span>
-            </div>
-
-            <div class="brand-sub">
-                Filter File Sharing Bot
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="header-actions">
-
-        <button
-            class="icon-button"
-            onclick="openSheet('notifications')">
-
-            <svg viewBox="0 0 24 24">
-                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
-                <path d="M10 21h4"/>
-            </svg>
-
-        </button>
-
-
-        <button
-            class="icon-button"
-            onclick="openSheet('allMenu')">
-
-            <svg viewBox="0 0 24 24">
-                <circle cx="5" cy="12" r="1"/>
-                <circle cx="12" cy="12" r="1"/>
-                <circle cx="19" cy="12" r="1"/>
-            </svg>
-
-        </button>
-
-    </div>
-
-</header>
-
-
-<!-- HERO -->
-
-<section class="hero">
-
-    <div class="hero-orb"></div>
-
-    <div class="hero-content">
-
-        <div class="welcome" id="welcome">
-            Welcome back
-        </div>
-
-        <h1>
-            Your Telegram<br>
-            assistant.
-        </h1>
-
-        <p>
-            Simple, fast and reliable.
-            Everything you need is available
-            inside Telegram.
-        </p>
-
-        <div class="status">
-            <span class="status-dot"></span>
-            Bot is Online
-        </div>
-
-
-        <button
-            class="primary"
-            onclick="openBot()">
-
-            <svg viewBox="0 0 24 24">
-                <path d="M22 2 11 13"/>
-                <path d="m22 2-7 20-4-9-9-4Z"/>
-            </svg>
-
-            Open Spark X Bot
-
-        </button>
-
-    </div>
-
-</section>
-
-
-<!-- STATS -->
-
-<section class="stats">
-
-    <div class="stat">
-
-        <div class="stat-icon">
-
-            <svg viewBox="0 0 24 24">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                <circle cx="9" cy="7" r="4"/>
-                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-            </svg>
-
-        </div>
-
-        <div class="stat-value">
-            10K+
-        </div>
-
-        <span class="stat-label">
-            Users
-        </span>
-
-    </div>
-
-
-    <div class="stat">
-
-        <div class="stat-icon">
-
-            <svg viewBox="0 0 24 24">
-                <path d="M13 2 3 14h9l-1 8 10-12h-9Z"/>
-            </svg>
-
-        </div>
-
-        <div class="stat-value">
-            24/7
-        </div>
-
-        <span class="stat-label">
-            Available
-        </span>
-
-    </div>
-
-
-    <div class="stat">
-
-        <div class="stat-icon">
-
-            <svg viewBox="0 0 24 24">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/>
-                <path d="m9 12 2 2 4-4"/>
-            </svg>
-
-        </div>
-
-        <div class="stat-value">
-            99.9%
-        </div>
-
-        <span class="stat-label">
-            Uptime
-        </span>
-
-    </div>
-
-</section>
-
-
-<!-- QUICK ACCESS -->
-
-<section class="section">
-
-    <div class="section-header">
-
-        <div class="section-title">
-            Quick Access
-        </div>
-
-        <div class="section-more">
-            Explore
-        </div>
-
-    </div>
-
-
-    <div class="menu-grid">
-
-
-        <!-- FEATURES -->
-
-        <div
-            class="menu-card"
-            onclick="openSheet('features')">
-
-            <div class="menu-icon">
-
-                <svg viewBox="0 0 24 24">
-                    <path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8Z"/>
-                    <path d="m19 15 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8Z"/>
-                </svg>
-
-            </div>
-
-            <h3>
-                Features
-            </h3>
-
-            <p>
-                Explore Spark X capabilities.
-            </p>
-
-        </div>
-
-
-        <!-- BOT STATUS -->
-
-        <div
-            class="menu-card"
-            onclick="openSheet('botStatus')">
-
-            <div class="menu-icon">
-
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 3v3"/>
-                    <rect x="4" y="7" width="16" height="12" rx="3"/>
-                    <circle cx="9" cy="12" r="1"/>
-                    <circle cx="15" cy="12" r="1"/>
-                    <path d="M9 16h6"/>
-                </svg>
-
-            </div>
-
-            <h3>
-                Bot Status
-            </h3>
-
-            <p>
-                Check current service status.
-            </p>
-
-        </div>
-
-
-        <!-- STATISTICS -->
-
-        <div
-            class="menu-card"
-            onclick="openSheet('statistics')">
-
-            <div class="menu-icon">
-
-                <svg viewBox="0 0 24 24">
-                    <path d="M4 19V5"/>
-                    <path d="M4 19h16"/>
-                    <path d="m7 15 4-4 3 2 5-6"/>
-                </svg>
-
-            </div>
-
-            <h3>
-                Statistics
-            </h3>
-
-            <p>
-                View service information.
-            </p>
-
-        </div>
-
-
-        <!-- HELP -->
-
-        <div
-            class="menu-card"
-            onclick="openSheet('help')">
-
-            <div class="menu-icon">
-
-                <svg viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="9"/>
-                    <path d="M9.5 9a2.5 2.5 0 1 1 4.2 1.8c-1 .7-1.7 1.2-1.7 2.7"/>
-                    <path d="M12 17h.01"/>
-                </svg>
-
-            </div>
-
-            <h3>
-                Help Center
-            </h3>
-
-            <p>
-                Find answers and guides.
-            </p>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- FEATURE LIST -->
-
-<section class="section">
-
-    <div class="section-header">
-
-        <div class="section-title">
-            What's Included
-        </div>
-
-        <div class="section-more">
-            Spark X
-        </div>
-
-    </div>
-
-
-    <div class="feature-list">
-
-
-        <div class="feature">
-
-            <div class="feature-icon">
-
-                <svg viewBox="0 0 24 24">
-                    <path d="M4 12a8 8 0 0 1 16 0"/>
-                    <path d="M4 12v5"/>
-                    <path d="M20 12v5"/>
-                    <rect x="3" y="16" width="4" height="5" rx="2"/>
-                    <rect x="17" y="16" width="4" height="5" rx="2"/>
-                </svg>
-
-            </div>
-
-            <div class="feature-text">
-                <strong>
-                    Fast & Reliable
-                </strong>
-
-                <span>
-                    Designed for a smooth Telegram experience.
-                </span>
-            </div>
-
-            <div class="feature-check">
-                ✓
-            </div>
-
-        </div>
-
-
-        <div class="feature">
-
-            <div class="feature-icon">
-
-                <svg viewBox="0 0 24 24">
-                    <path d="M4 6h16"/>
-                    <path d="M4 12h16"/>
-                    <path d="M4 18h16"/>
-                </svg>
-
-            </div>
-
-            <div class="feature-text">
-
-                <strong>
-                    Smart Filtering
-                </strong>
-
-                <span>
-                    Organized and efficient file discovery.
-                </span>
-
-            </div>
-
-            <div class="feature-check">
-                ✓
-            </div>
-
-        </div>
-
-
-        <div class="feature">
-
-            <div class="feature-icon">
-
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 3v3"/>
-                    <rect x="4" y="7" width="16" height="12" rx="3"/>
-                    <circle cx="9" cy="12" r="1"/>
-                    <circle cx="15" cy="12" r="1"/>
-                    <path d="M9 16h6"/>
-                </svg>
-
-            </div>
-
-            <div class="feature-text">
-
-                <strong>
-                    Telegram Native
-                </strong>
-
-                <span>
-                    Built specifically for Telegram.
-                </span>
-
-            </div>
-
-            <div class="feature-check">
-                ✓
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- COMMUNITY -->
-
-<section class="community">
-
-    <div class="community-top">
-
-        <div class="community-icon">
-
-            <svg viewBox="0 0 24 24">
-                <path d="M21 3 3 10l7 3 3 7 8-17Z"/>
-                <path d="m10 13 4-4"/>
-            </svg>
-
-        </div>
-
-        <div class="community-text">
-
-            <h3>
-                Stay Connected
-            </h3>
-
-            <p>
-                Get updates and join the community.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <div class="community-buttons">
-
-        <button
-            class="community-button channel"
-            onclick="joinChannel()">
-
-            Updated Channel
-
-        </button>
-
-        <button
-            class="community-button group"
-            onclick="joinGroup()">
-
-            Community Group
-
-        </button>
-
-    </div>
-
-</section>
-
-
-<!-- SHARE -->
-
-<section
-    class="share-card"
-    onclick="shareBot()">
-
-    <div class="share-icon">
-
-        <svg viewBox="0 0 24 24">
-            <circle cx="18" cy="5" r="3"/>
-            <circle cx="6" cy="12" r="3"/>
-            <circle cx="18" cy="19" r="3"/>
-            <path d="m8.6 13.5 6.8 4"/>
-            <path d="m15.4 6.5-6.8 4"/>
-        </svg>
-
-    </div>
-
-    <div class="share-text">
-
-        <h3>
-            Share Spark X
-        </h3>
-
-        <p>
-            Invite your friends to use the bot.
-        </p>
-
-    </div>
-
-    <div class="share-arrow">
-
-        <svg viewBox="0 0 24 24">
-            <path d="m9 18 6-6-6-6"/>
-        </svg>
-
-    </div>
-
-</section>
-
-
-<!-- PROFILE -->
-
-<section class="profile">
-
-    <div
-        class="avatar"
-        id="avatar">
-
-        <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="8" r="4"/>
-            <path d="M4 21a8 8 0 0 1 16 0"/>
-        </svg>
-
-    </div>
-
-    <div class="profile-info">
-
-        <h3 id="userName">
-            Telegram User
-        </h3>
-
-        <p id="username">
-            @username
-        </p>
-
-    </div>
-
-    <div class="online">
-
-        <span class="status-dot"></span>
-
-        Online
-
-    </div>
-
-</section>
-
-</main>
-
-
 <!-- BOTTOM NAV -->
-
 <nav class="bottom-nav">
-
-    <button
-        class="nav active"
-        onclick="goHome(this)">
-
-        <svg viewBox="0 0 24 24">
-            <path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/>
-            <path d="M9 22v-8h6v8"/>
+    <button class="nav-item active" data-page="home" onclick="navHome(this)">
+        <svg viewBox="0 0 24 24" fill="none">
+            <path d="m4 10 8-7 8 7v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-9Z"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linejoin="round"/>
+            <path d="M9 21v-6h6v6"
+                  stroke="currentColor"
+                  stroke-width="1.7"/>
         </svg>
-
         Home
-
     </button>
-
-
-    <button
-        class="nav"
-        onclick="openSheet('features')">
-
-        <svg viewBox="0 0 24 24">
-            <path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8Z"/>
+    <button class="nav-item" onclick="openSheet('features')">
+        <svg viewBox="0 0 24 24" fill="none">
+            <rect x="4" y="4" width="6" height="6" rx="1"
+                  stroke="currentColor" stroke-width="1.6"/>
+            <rect x="14" y="4" width="6" height="6" rx="1"
+                  stroke="currentColor" stroke-width="1.6"/>
+            <rect x="4" y="14" width="6" height="6" rx="1"
+                  stroke="currentColor" stroke-width="1.6"/>
+            <rect x="14" y="14" width="6" height="6" rx="1"
+                  stroke="currentColor" stroke-width="1.6"/>
         </svg>
-
         Features
-
     </button>
-
-
-    <button
-        class="nav"
-        onclick="openBot()">
-
-        <svg viewBox="0 0 24 24">
-            <path d="M22 2 11 13"/>
-            <path d="m22 2-7 20-4-9-9-4Z"/>
+    <button class="nav-item" onclick="openSheet('botStatus')">
+        <svg viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="8"
+                    stroke="currentColor" stroke-width="1.7"/>
+            <path d="M12 8v4l2.5 2.5"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"/>
         </svg>
-
         Bot
-
     </button>
-
-
-    <button
-        class="nav"
-        onclick="openSheet('community')">
-
-        <svg viewBox="0 0 24 24">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    <button class="nav-item" onclick="openSheet('community')">
+        <svg viewBox="0 0 24 24" fill="none">
+            <path d="M16 20v-1.5a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4V20"
+                  stroke="currentColor" stroke-width="1.7"/>
+            <circle cx="9.5" cy="7" r="3"
+                    stroke="currentColor" stroke-width="1.7"/>
+            <path d="M17 11a3 3 0 1 0-1-5.8M21 20v-1.5a4 4 0 0 0-3-3.9"
+                  stroke="currentColor" stroke-width="1.7"
+                  stroke-linecap="round"/>
         </svg>
-
         Community
-
     </button>
-
-
-    <button
-        class="nav"
-        onclick="openSheet('settings')">
-
-        <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.5 1.5-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-2.1v-.2a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1-1.5-1.5.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H7v-2.1h.2a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1 1.5-1.5.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6V4h2.1v.2a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.5 1.5-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2V12h-.2a1.7 1.7 0 0 0-1.6 1Z"/>
+    <button class="nav-item" onclick="openSheet('settings')">
+        <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z"
+                  stroke="currentColor" stroke-width="1.7"/>
+            <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.7 1.7-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V20h-2.4v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1L8 17l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H6v-2.4h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9L7.3 8.6 9 7l.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5V5h2.4v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1L19 8l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1h.2v2.4h-.2a1.7 1.7 0 0 0-1.5 1Z"
+                  stroke="currentColor"
+                  stroke-width="1.2"
+                  stroke-linejoin="round"/>
         </svg>
-
         Settings
-
     </button>
-
 </nav>
-
-
 <!-- OVERLAY -->
-
-<div
-    class="overlay"
-    id="overlay"
-    onclick="closeSheet()">
-</div>
-
-
-<!-- SHEET -->
-
-<section
-    class="sheet"
-    id="sheet">
-
-    <div class="handle"></div>
-
-    <h2
-        class="sheet-title"
-        id="sheetTitle">
-        Menu
-    </h2>
-
-    <p
-        class="sheet-description"
-        id="sheetDescription">
-        Spark X
-    </p>
-
-    <div
-        class="sheet-list"
-        id="sheetList">
+<div class="overlay" id="overlay" onclick="closeSheet()"></div>
+<!-- BOTTOM SHEET -->
+<div class="sheet" id="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+        <h2 id="sheetTitle">Menu</h2>
+        <button class="sheet-close" onclick="closeSheet()">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="m7 7 10 10M17 7 7 17"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"/>
+            </svg>
+        </button>
     </div>
-
-    <button
-        class="close-sheet"
-        onclick="closeSheet()">
-
-        Close
-
-    </button>
-
-</section>
-
-
-<!-- TOAST -->
-
-<div
-    class="toast"
-    id="toast">
+    <div id="sheetContent"></div>
 </div>
-
-
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 <script>
-
-/* =====================================================
-   CONFIG
-===================================================== */
-
+/* =========================================================
+   SPARK X CONFIGURATION
+========================================================= */
 const BOT_USERNAME = "SparkXMoviesBot";
-
-const CHANNEL_URL =
-"https://t.me/+vLdb0RztiqsxN2Q1";
-
-const GROUP_URL =
-"https://t.me/+GfXqqkprPo01NDdl";
-
 const BOT_URL =
-"https://t.me/" + BOT_USERNAME;
-
-
-/* =====================================================
+    "https://t.me/" + BOT_USERNAME;
+const CHANNEL_URL =
+    "https://t.me/+vLdb0RztiqsxN2Q1";
+const GROUP_URL =
+    "https://t.me/+GfXqqkprPo01NDdl";
+/* =========================================================
    TELEGRAM
-===================================================== */
-
-const tg =
-window.Telegram?.WebApp;
-
+========================================================= */
+const tg = window.Telegram?.WebApp;
 if(tg){
-
     tg.ready();
-
     tg.expand();
-
     try{
-        tg.setHeaderColor("#f6f8fc");
-        tg.setBackgroundColor("#f6f8fc");
+        tg.setHeaderColor("#f7f8fc");
+        tg.setBackgroundColor("#f7f8fc");
     }catch(e){}
-
+}
+/* =========================================================
+   HAPTIC
+========================================================= */
+function haptic(type="light"){
+    try{
+        if(tg && tg.HapticFeedback){
+            tg.HapticFeedback.impactOccurred(type);
+        }
+    }catch(e){}
+}
+/* =========================================================
+   TELEGRAM USER
+========================================================= */
+function loadTelegramUser(){
     const user =
-    tg.initDataUnsafe?.user;
-
-    if(user){
-
-        const first =
-        user.first_name || "User";
-
-        const last =
-        user.last_name || "";
-
-        const name =
-        `${first} ${last}`.trim();
-
-        document
-        .getElementById("welcome")
-        .textContent =
-        `Welcome, ${first}`;
-
-        document
-        .getElementById("userName")
-        .textContent =
-        name;
-
-        document
-        .getElementById("username")
+        tg?.initDataUnsafe?.user;
+    if(!user){
+        return;
+    }
+    const firstName =
+        user.first_name || "there";
+    const fullName =
+        [user.first_name,user.last_name]
+        .filter(Boolean)
+        .join(" ") || "Telegram User";
+    document.getElementById("welcomeName")
+        .textContent = firstName;
+    document.getElementById("profileName")
+        .textContent = fullName;
+    document.getElementById("profileUsername")
         .textContent =
         user.username
-        ? `@${user.username}`
-        : "Telegram user";
-
-        if(user.photo_url){
-
-            document
-            .getElementById("avatar")
+        ? "@" + user.username
+        : "Telegram account";
+    document.getElementById("telegramId")
+        .textContent =
+        user.id || "Not available";
+    if(user.photo_url){
+        document.getElementById("avatarContainer")
             .innerHTML =
-            `<img src="${user.photo_url}" alt="Profile">`;
-
-        }
-
+            `<img class="avatar"
+                  src="${user.photo_url}"
+                  alt="Profile">`;
+    }else{
+        const initial =
+            (user.first_name || "U")
+            .charAt(0)
+            .toUpperCase();
+        document.getElementById("avatarPlaceholder")
+            .textContent = initial;
     }
-
 }
-
-
-/* =====================================================
-   HAPTIC
-===================================================== */
-
-function haptic(type="light"){
-
-    try{
-
-        tg?.HapticFeedback
-        ?.impactOccurred(type);
-
-    }catch(e){}
-
-}
-
-
-/* =====================================================
-   BOT
-===================================================== */
-
-function openBot(){
-
-    haptic("medium");
-
-    openTelegram(BOT_URL);
-
-}
-
-
-/* =====================================================
-   TELEGRAM OPEN
-===================================================== */
-
+/* =========================================================
+   TELEGRAM LINKS
+========================================================= */
 function openTelegram(url){
-
-    if(tg){
-
-        try{
-
+    haptic("light");
+    try{
+        if(tg && tg.openTelegramLink){
             tg.openTelegramLink(url);
-
-            return;
-
-        }catch(e){}
-
+        }else{
+            window.open(url,"_blank");
+        }
+    }catch(e){
+        window.open(url,"_blank");
     }
-
-    window.open(
-        url,
-        "_blank"
-    );
-
 }
-
-
-/* =====================================================
-   CHANNEL
-===================================================== */
-
-function joinChannel(){
-
-    haptic();
-
-    openTelegram(
-        CHANNEL_URL
-    );
-
+function openBot(){
+    openTelegram(BOT_URL);
 }
-
-
-/* =====================================================
-   GROUP
-===================================================== */
-
-function joinGroup(){
-
-    haptic();
-
-    openTelegram(
-        GROUP_URL
-    );
-
+function openChannel(){
+    openTelegram(CHANNEL_URL);
 }
-
-
-/* =====================================================
+function openGroup(){
+    openTelegram(GROUP_URL);
+}
+/* =========================================================
    SHARE
-===================================================== */
-
+========================================================= */
 function shareBot(){
-
     haptic("medium");
-
-    const shareText =
-    "Check out Spark X | Filter File Sharing Bot";
-
     const shareUrl =
-    `https://t.me/share/url?url=${encodeURIComponent(BOT_URL)}&text=${encodeURIComponent(shareText)}`;
-
+        "https://t.me/share/url?url=" +
+        encodeURIComponent(BOT_URL) +
+        "&text=" +
+        encodeURIComponent(
+            "Check out Spark X Telegram Bot"
+        );
     openTelegram(shareUrl);
-
 }
-
-
-/* =====================================================
-   COPY BOT USERNAME
-===================================================== */
-
-function copyBot(){
-
-    navigator.clipboard
-    ?.writeText(
-        "@" + BOT_USERNAME
-    );
-
-    notify(
-        "Bot username copied"
-    );
-
-}
-
-
-/* =====================================================
-   SHEET ICONS
-===================================================== */
-
-const icons = {
-
-    bot: `
-        <svg viewBox="0 0 24 24">
-            <path d="M12 3v3"/>
-            <rect x="4" y="7" width="16" height="12" rx="3"/>
-            <circle cx="9" cy="12" r="1"/>
-            <circle cx="15" cy="12" r="1"/>
-            <path d="M9 16h6"/>
-        </svg>
-    `,
-
-    spark: `
-        <svg viewBox="0 0 24 24">
-            <path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8Z"/>
-        </svg>
-    `,
-
-    chart: `
-        <svg viewBox="0 0 24 24">
-            <path d="M4 19V5"/>
-            <path d="M4 19h16"/>
-            <path d="m7 15 4-4 3 2 5-6"/>
-        </svg>
-    `,
-
-    help: `
-        <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="9"/>
-            <path d="M9.5 9a2.5 2.5 0 1 1 4.2 1.8c-1 .7-1.7 1.2-1.7 2.7"/>
-            <path d="M12 17h.01"/>
-        </svg>
-    `,
-
-    update: `
-        <svg viewBox="0 0 24 24">
-            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
-            <path d="M10 21h4"/>
-        </svg>
-    `,
-
-    users: `
-        <svg viewBox="0 0 24 24">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-        </svg>
-    `,
-
-    share: `
-        <svg viewBox="0 0 24 24">
-            <circle cx="18" cy="5" r="3"/>
-            <circle cx="6" cy="12" r="3"/>
-            <circle cx="18" cy="19" r="3"/>
-            <path d="m8.6 13.5 6.8 4"/>
-            <path d="m15.4 6.5-6.8 4"/>
-        </svg>
-    `,
-
-    settings: `
-        <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M19 15a2 2 0 0 0 .4 2.2l.1.1-1.5 1.5-.1-.1a2 2 0 0 0-2.2-.4 2 2 0 0 0-1.2 1.8v.2h-2.1v-.2a2 2 0 0 0-1.2-1.8 2 2 0 0 0-2.2.4l-.1.1-1.5-1.5.1-.1A2 2 0 0 0 8 15a2 2 0 0 0-1.8-1.2H6v-2.1h.2A2 2 0 0 0 8 10.5a2 2 0 0 0-.4-2.2l-.1-.1L9 6.7l.1.1a2 2 0 0 0 2.2.4 2 2 0 0 0 1.2-1.8v-.2h2.1v.2a2 2 0 0 0 1.2 1.8 2 2 0 0 0 2.2-.4l.1-.1 1.5 1.5-.1.1A2 2 0 0 0 19 10.5a2 2 0 0 0 1.8 1.2h.2v2.1h-.2A2 2 0 0 0 19 15Z"/>
-        </svg>
-    `,
-
-    shield: `
-        <svg viewBox="0 0 24 24">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/>
-            <path d="m9 12 2 2 4-4"/>
-        </svg>
-    `,
-
-    info: `
-        <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="9"/>
-            <path d="M12 11v5"/>
-            <path d="M12 8h.01"/>
-        </svg>
-    `,
-
-    language: `
-        <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="9"/>
-            <path d="M3 12h18"/>
-            <path d="M12 3a14 14 0 0 1 0 18"/>
-            <path d="M12 3a14 14 0 0 0 0 18"/>
-        </svg>
-    `,
-
-    star: `
-        <svg viewBox="0 0 24 24">
-            <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9Z"/>
-        </svg>
-    `,
-
-    support: `
-        <svg viewBox="0 0 24 24">
-            <path d="M21 11.5a8.5 8.5 0 0 1-9 8.5 9 9 0 0 1-4-.9L3 21l1.9-4.5A8.3 8.3 0 0 1 3 11.5a8.5 8.5 0 0 1 9-8.5 8.5 8.5 0 0 1 9 8.5Z"/>
-        </svg>
-    `,
-
-    copy: `
-        <svg viewBox="0 0 24 24">
-            <rect x="8" y="8" width="12" height="12" rx="2"/>
-            <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>
-        </svg>
-    `
-
-};
-
-
-/* =====================================================
-   SHEET DATA
-===================================================== */
-
-const menus = {
-
-
-    features:{
-
-        title:"Spark X Features",
-
-        description:
-        "Everything available in your Telegram assistant.",
-
-        items:[
-
-            [
-                "spark",
-                "Smart Auto Filter",
-                "Automatic filtering for a smoother experience."
-            ],
-
-            [
-                "bot",
-                "Fast File Access",
-                "Designed for quick file discovery."
-            ],
-
-            [
-                "shield",
-                "Reliable Service",
-                "Built for a stable Telegram experience."
-            ],
-
-            [
-                "update",
-                "Regular Improvements",
-                "New improvements can be added over time."
-            ]
-
-        ]
-
-    },
-
-
-    botStatus:{
-
-        title:"Bot Status",
-
-        description:
-        "Current Spark X service information.",
-
-        items:[
-
-            [
-                "bot",
-                "Service Status",
-                "Spark X is currently online."
-            ],
-
-            [
-                "shield",
-                "System",
-                "All primary services are operational."
-            ],
-
-            [
-                "chart",
-                "Availability",
-                "Service is designed for 24/7 availability."
-            ]
-
-        ]
-
-    },
-
-
-    statistics:{
-
-        title:"Statistics",
-
-        description:
-        "General Spark X dashboard information.",
-
-        items:[
-
-            [
-                "users",
-                "Users",
-                "10K+ registered users."
-            ],
-
-            [
-                "bot",
-                "Availability",
-                "24/7 service availability."
-            ],
-
-            [
-                "shield",
-                "Uptime",
-                "99.9% service uptime target."
-            ],
-
-            [
-                "chart",
-                "Performance",
-                "Fast and lightweight Telegram experience."
-            ]
-
-        ]
-
-    },
-
-
-    help:{
-
-        title:"Help Center",
-
-        description:
-        "Find quick answers about Spark X.",
-
-        items:[
-
-            [
-                "bot",
-                "How to Start",
-                "Open the Spark X bot and follow its instructions.",
-                openBot
-            ],
-
-            [
-                "spark",
-                "How Filtering Works",
-                "Use the bot's available search and filtering options."
-            ],
-
-            [
-                "support",
-                "Need Assistance?",
-                "Open the support section for help.",
-                () => openSheet("support")
-            ]
-
-        ]
-
-    },
-
-
-    updates:{
-
-        title:"Latest Updates",
-
-        description:
-        "Stay connected with Spark X announcements.",
-
-        items:[
-
-            [
-                "update",
-                "Updated Channel",
-                "Open the official update channel.",
-                joinChannel
-            ],
-
-            [
-                "users",
-                "Community Group",
-                "Join the Spark X community.",
-                joinGroup
-            ]
-
-        ]
-
-    },
-
-
-    community:{
-
-        title:"Community",
-
-        description:
-        "Connect with Spark X.",
-
-        items:[
-
-            [
-                "update",
-                "Updated Channel",
-                "Latest announcements and updates.",
-                joinChannel
-            ],
-
-            [
-                "users",
-                "Community Group",
-                "Join the community.",
-                joinGroup
-            ],
-
-            [
-                "share",
-                "Share Spark X",
-                "Invite your friends.",
-                shareBot
-            ]
-
-        ]
-
-    },
-
-
-    support:{
-
-        title:"Support",
-
-        description:
-        "Choose how you want to get assistance.",
-
-        items:[
-
-            [
-                "users",
-                "Community Group",
-                "Ask questions in the community.",
-                joinGroup
-            ],
-
-            [
-                "update",
-                "Updates Channel",
-                "Check the latest announcements.",
-                joinChannel
-            ],
-
-            [
-                "bot",
-                "Open Bot",
-                "Return to Spark X.",
-                openBot
-            ]
-
-        ]
-
-    },
-
-
-    settings:{
-
-        title:"Settings",
-
-        description:
-        "Customize your Mini App experience.",
-
-        items:[
-
-            [
-                "language",
-                "Language",
-                "Language selection can be connected here."
-            ],
-
-            [
-                "info",
-                "App Information",
-                "View Spark X information.",
-                () => openSheet("about")
-            ],
-
-            [
-                "shield",
-                "Privacy",
-                "View privacy information.",
-                () => openSheet("privacy")
-            ],
-
-            [
-                "star",
-                "Rate Spark X",
-                "Share your feedback."
-            ]
-
-        ]
-
-    },
-
-
-    privacy:{
-
-        title:"Privacy",
-
-        description:
-        "Basic information about this Mini App.",
-
-        items:[
-
-            [
-                "shield",
-                "Telegram Data",
-                "The Mini App can read basic Telegram profile information provided by Telegram."
-            ],
-
-            [
-                "shield",
-                "No Password Required",
-                "Never enter your Telegram password inside the Mini App."
-            ],
-
-            [
-                "info",
-                "Stay Safe",
-                "Only use official Spark X links."
-            ]
-
-        ]
-
-    },
-
-
-    about:{
-
-        title:"About Spark X",
-
-        description:
-        "Information about this Mini App.",
-
-        items:[
-
-            [
-                "bot",
-                "Name",
-                "Spark X | Filter File Sharing Bot"
-            ],
-
-            [
-                "info",
-                "Username",
-                "@SparkXMoviesBot"
-            ],
-
-            [
-                "update",
-                "Updated Channel",
-                "Official Spark X update channel.",
-                joinChannel
-            ],
-
-            [
-                "users",
-                "Community",
-                "Official Spark X community.",
-                joinGroup
-            ]
-
-        ]
-
-    },
-
-
-    notifications:{
-
-        title:"Notifications",
-
-        description:
-        "Your Spark X notification center.",
-
-        items:[
-
-            [
-                "update",
-                "No New Notifications",
-                "You're all caught up."
-            ],
-
-            [
-                "shield",
-                "Service Online",
-                "Spark X is currently available."
-            ]
-
-        ]
-
-    },
-
-
-    allMenu:{
-
-        title:"Spark X Menu",
-
-        description:
-        "All important sections in one place.",
-
-        items:[
-
-            [
-                "spark",
-                "Features",
-                "Explore Spark X features.",
-                () => openSheet("features")
-            ],
-
-            [
-                "bot",
-                "Bot Status",
-                "Check service status.",
-                () => openSheet("botStatus")
-            ],
-
-            [
-                "chart",
-                "Statistics",
-                "View dashboard statistics.",
-                () => openSheet("statistics")
-            ],
-
-            [
-                "update",
-                "Updates",
-                "Latest announcements.",
-                () => openSheet("updates")
-            ],
-
-            [
-                "users",
-                "Community",
-                "Join the community.",
-                () => openSheet("community")
-            ],
-
-            [
-                "support",
-                "Support",
-                "Get assistance.",
-                () => openSheet("support")
-            ],
-
-            [
-                "settings",
-                "Settings",
-                "Customize your experience.",
-                () => openSheet("settings")
-            ],
-
-            [
-                "info",
-                "About",
-                "About Spark X.",
-                () => openSheet("about")
-            ]
-
-        ]
-
+/* =========================================================
+   COPY
+========================================================= */
+async function copyText(text){
+    haptic("light");
+    try{
+        await navigator.clipboard.writeText(text);
+        showToast("Copied successfully");
+    }catch(e){
+        showToast("Copy failed");
     }
-
+}
+/* =========================================================
+   TOAST
+========================================================= */
+let toastTimer;
+function showToast(message){
+    const toast =
+        document.getElementById("toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer =
+        setTimeout(
+            ()=>toast.classList.remove("show"),
+            2200
+        );
+}
+/* =========================================================
+   BOT STATUS
+========================================================= */
+function refreshStatus(button){
+    haptic("light");
+    const original =
+        button.textContent;
+    button.innerHTML =
+        "Checking...";
+    setTimeout(()=>{
+        button.innerHTML =
+            "Refresh Status";
+        document.getElementById("lastChecked")
+            .textContent =
+            "Just checked";
+        showToast("Bot status refreshed");
+    },700);
+}
+/* =========================================================
+   SHEET DATA
+========================================================= */
+const menus = {
+features:{
+title:"Features",
+items:[
+[
+"Fast & Reliable",
+"Quick Telegram interaction",
+"bolt"
+],
+[
+"Smart Filtering",
+"Simple and efficient filtering",
+"filter"
+],
+[
+"Telegram Native",
+"Designed for Telegram",
+"telegram"
+],
+[
+"Easy Access",
+"Everything in one dashboard",
+"grid"
+],
+[
+"Community",
+"Stay connected with Spark X",
+"users"
+]
+]
+},
+botStatus:{
+title:"Bot Status",
+items:[
+[
+"Bot Online",
+"Spark X is currently available",
+"online"
+],
+[
+"Telegram Connected",
+"Mini App connected to Telegram",
+"telegram"
+],
+[
+"Service",
+"Available through Telegram",
+"server"
+]
+]
+},
+notifications:{
+title:"Notifications",
+items:[
+[
+"Spark X Ready",
+"Dashboard is ready to use",
+"bell"
+],
+[
+"Community Updates",
+"Check the official channel for announcements",
+"megaphone"
+],
+[
+"Support",
+"Need help? Open the support section",
+"support"
+]
+]
+},
+community:{
+title:"Community",
+items:[
+[
+"Official Channel",
+"Get the latest announcements",
+"telegram",
+"channel"
+],
+[
+"Community Group",
+"Connect with the community",
+"users",
+"group"
+],
+[
+"Share Spark X",
+"Invite your friends",
+"share"
+]
+]
+},
+support:{
+title:"Support",
+items:[
+[
+"Help Center",
+"Read frequently asked questions",
+"help",
+"help"
+],
+[
+"Contact Support",
+"Open Telegram support",
+"support",
+"group"
+],
+[
+"Community",
+"Ask questions in the community",
+"users",
+"group"
+]
+]
+},
+about:{
+title:"About Spark X",
+items:[
+[
+"Spark X",
+"Filter File Sharing Bot",
+"info"
+],
+[
+"Mini App",
+"Premium Telegram dashboard",
+"mobile"
+],
+[
+"Version",
+"Dashboard Version 3.0",
+"code"
+]
+]
+},
+privacy:{
+title:"Privacy",
+items:[
+[
+"Telegram Data",
+"Uses Telegram WebApp user information",
+"shield"
+],
+[
+"No Password",
+"The dashboard never asks for your Telegram password",
+"lock"
+],
+[
+"Secure Links",
+"Telegram links open through Telegram",
+"check"
+]
+]
+},
+allMenu:{
+title:"Menu",
+items:[
+[
+"Features",
+"Explore Spark X capabilities",
+"grid",
+"features"
+],
+[
+"Notifications",
+"View updates and notices",
+"bell",
+"notifications"
+],
+[
+"Help Center",
+"FAQs and guidance",
+"help",
+"help"
+],
+[
+"Community",
+"Channel and group",
+"users",
+"community"
+],
+[
+"Share Bot",
+"Share Spark X with friends",
+"share"
+],
+[
+"Support",
+"Get assistance",
+"support"
+],
+[
+"About",
+"About Spark X",
+"info",
+"about"
+],
+[
+"Privacy",
+"Privacy information",
+"shield",
+"privacy"
+],
+[
+"Settings",
+"App preferences",
+"settings"
+]
+]
+}
 };
-
-
-/* =====================================================
-   OPEN SHEET
-===================================================== */
-
+/* =========================================================
+   SVG ICONS
+========================================================= */
+function icon(name){
+const icons={
+bolt:`<svg viewBox="0 0 24 24" fill="none">
+<path d="M13 2 4 13h6l-1 9 9-12h-6l1-8Z"
+stroke="currentColor" stroke-width="1.7"
+stroke-linejoin="round"/></svg>`,
+filter:`<svg viewBox="0 0 24 24" fill="none">
+<path d="M4 6h16M7 12h10M10 18h4"
+stroke="currentColor" stroke-width="1.7"
+stroke-linecap="round"/></svg>`,
+telegram:`<svg viewBox="0 0 24 24" fill="none">
+<path d="M21 4 3 11l7 2 2 7 9-16Z"
+stroke="currentColor" stroke-width="1.7"
+stroke-linejoin="round"/></svg>`,
+grid:`<svg viewBox="0 0 24 24" fill="none">
+<rect x="4" y="4" width="6" height="6" rx="1"
+stroke="currentColor" stroke-width="1.6"/>
+<rect x="14" y="4" width="6" height="6" rx="1"
+stroke="currentColor" stroke-width="1.6"/>
+<rect x="4" y="14" width="6" height="6" rx="1"
+stroke="currentColor" stroke-width="1.6"/>
+<rect x="14" y="14" width="6" height="6" rx="1"
+stroke="currentColor" stroke-width="1.6"/></svg>`,
+users:`<svg viewBox="0 0 24 24" fill="none">
+<circle cx="9" cy="8" r="3"
+stroke="currentColor" stroke-width="1.7"/>
+<path d="M3 20v-1a5 5 0 0 1 10 0v1"
+stroke="currentColor" stroke-width="1.7"
+stroke-linecap="round"/>
+<path d="M16 5a3 3 0 0 1 0 6M16 14a5 5 0 0 1 5 5"
+stroke="currentColor" stroke-width="1.7"
+stroke-linecap="round"/></svg>`,
+online:`<svg viewBox="0 0 24 24" fill="none">
+<circle cx="12" cy="12" r="8"
+stroke="currentColor" stroke-width="1.7"/>
+<path d="m8 12 2.5 2.5L16 9"
+stroke="currentColor" stroke-width="1.7"
+stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+server:`<svg viewBox="0 0 24 24" fill="none">
+<rect x="4" y="4" width="16" height="6" rx="2"
+stroke="currentColor" stroke-width="1.7"/>
+<rect x="4" y="14" width="16" height="6" rx="2"
+stroke="currentColor" stroke-width="1.7"/>
+<circle cx="8" cy="7" r="1" fill="currentColor"/>
+<circle cx="8" cy="17" r="1" fill="currentColor"/></svg>`,
+bell:`<svg viewBox="0 0 24 24" fill="none">
+<path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"
+stroke="currentColor" stroke-width="1.7"
+stroke-linecap="round"/>
+<path d="M10 21h4"
+stroke="currentColor" stroke-width="1.7"
+stroke-linecap="round"/></svg>`,
+megaphone:`<svg viewBox="0 0 24 24" fill="none">
+<path d="m4 13 12 4V5L4 9v4Z"
+stroke="currentColor" stroke-width="1.7"
+stroke-linejoin="round"/>
+<path d="M16 9h3a2 2 0 0 1 0 4h-3M7 13l1 6"
+stroke="currentColor" stroke-width="1.7"
+stroke-linecap="round"/></svg>`,
+support:`<svg viewBox="0 0 24 24" fill="none">
+<path d="M20 11.5a8 8 0 0 1-8 8H7l-3 2v-5a8 8 0 1 1 16-5Z"
+stroke="currentColor" stroke-width="1.7"
+stroke-linejoin="round"/></svg>`,
+help:`<svg viewBox="0 0 24 24" fill="none">
+<circle cx="12" cy="12" r="9"
+stroke="currentColor" stroke-width="1.7"/>
+<path d="M9.7 9a2.4 2.4 0 1 1 4.1 1.7c-.9.9-1.8 1.2-1.8 2.5"
+stroke="currentColor" stroke-width="1.7"
+stroke-linecap="round"/>
+<circle cx="12" cy="16.5" r="1" fill="currentColor"/></svg>`,
+share:`<svg viewBox="0 0 24 24" fill="none">
+<path d="M12 15V4M8 8l4-4 4 4"
+stroke="currentColor" stroke-width="1.7"
+stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"
+stroke="currentColor" stroke-width="1.7"
+stroke-linecap="round"/></svg>`,
+info:`<svg viewBox="0 0 24 24" fill="none">
+<circle cx="12" cy="12" r="9"
+stroke="currentColor" stroke-width="1.7"/>
+<path d="M12 11v5M12 8h.01"
+stroke="currentColor" stroke-width="1.8"
+stroke-linecap="round"/></svg>`,
+mobile:`<svg viewBox="0 0 24 24" fill="none">
+<rect x="7" y="3" width="10" height="18" rx="2"
+stroke="currentColor" stroke-width="1.7"/>
+<path d="M11 18h2"
+stroke="currentColor" stroke-width="1.7"
+stroke-linecap="round"/></svg>`,
+code:`<svg viewBox="0 0 24 24" fill="none">
+<path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"
+stroke="currentColor" stroke-width="1.7"
+stroke-linecap="round"
+stroke-linejoin="round"/></svg>`,
+shield:`<svg viewBox="0 0 24 24" fill="none">
+<path d="M12 3 20 6v5c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V6l8-3Z"
+stroke="currentColor" stroke-width="1.7"
+stroke-linejoin="round"/>
+<path d="m8 12 2.5 2.5L16 9"
+stroke="currentColor" stroke-width="1.7"
+stroke-linecap="round"
+stroke-linejoin="round"/></svg>`,
+lock:`<svg viewBox="0 0 24 24" fill="none">
+<rect x="5" y="10" width="14" height="10" rx="2"
+stroke="currentColor" stroke-width="1.7"/>
+<path d="M8 10V7a4 4 0 0 1 8 0v3"
+stroke="currentColor" stroke-width="1.7"/></svg>`,
+check:`<svg viewBox="0 0 24 24" fill="none">
+<path d="m6 12 4 4 8-8"
+stroke="currentColor" stroke-width="2"
+stroke-linecap="round"
+stroke-linejoin="round"/></svg>`,
+settings:`<svg viewBox="0 0 24 24" fill="none">
+<circle cx="12" cy="12" r="3"
+stroke="currentColor" stroke-width="1.7"/>
+<path d="M19 13.5a1.7 1.7 0 0 0 .3 1.9l.1.1-1.8 1.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5v.2h-2.5v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1-1.8-1.8.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H6v-2.5h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1 1.8-1.8.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5V5h2.5v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.8 1.8-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1h.2V13h-.2a1.7 1.7 0 0 0-1.5.5Z"
+stroke="currentColor" stroke-width="1.2"
+stroke-linejoin="round"/></svg>`
+};
+return icons[name] || icons.info;
+}
+/* =========================================================
+   SHEET
+========================================================= */
 function openSheet(type){
-
-    haptic();
-
-    const data =
-    menus[type];
-
-    if(!data)return;
-
-    const title =
-    document.getElementById("sheetTitle");
-
-    const description =
-    document.getElementById("sheetDescription");
-
-    const list =
-    document.getElementById("sheetList");
-
-    title.textContent =
-    data.title;
-
-    description.textContent =
-    data.description;
-
-    list.innerHTML="";
-
-
-    data.items.forEach(item => {
-
-        const [
-            icon,
-            titleText,
-            descriptionText,
-            action
-        ] = item;
-
-
-        const button =
-        document.createElement("button");
-
-        button.className =
-        "sheet-item";
-
-
-        button.innerHTML = `
-
-            <div class="sheet-item-icon">
-                ${icons[icon] || icons.info}
-            </div>
-
-            <div class="sheet-item-content">
-
-                <strong>
-                    ${titleText}
-                </strong>
-
-                <span>
-                    ${descriptionText}
-                </span>
-
-            </div>
-
-            <div class="sheet-arrow">
-
-                <svg viewBox="0 0 24 24">
-                    <path d="m9 18 6-6-6-6"/>
-                </svg>
-
-            </div>
-
-        `;
-
-
-        button.onclick = () => {
-
-            haptic();
-
-            if(action){
-
-                action();
-
-            }else{
-
-                notify(
-                    `${titleText} selected`
-                );
-
+    haptic("light");
+    if(type === "settings"){
+        openSettings();
+        return;
+    }
+    if(type === "help"){
+        openHelp();
+        return;
+    }
+    const menu =
+        menus[type];
+    if(!menu) return;
+    document.getElementById("sheetTitle")
+        .textContent = menu.title;
+    const content =
+        document.getElementById("sheetContent");
+    content.innerHTML =
+        `<div class="sheet-list">
+            ${
+                menu.items.map(item=>{
+                    const action =
+                        item[3]
+                        ? `menuAction('${item[3]}')`
+                        : `showToast('Available')`;
+                    return `
+                    <button class="sheet-item"
+                            onclick="${action}">
+                        <div class="sheet-item-icon">
+                            ${icon(item[2])}
+                        </div>
+                        <div class="sheet-item-text">
+                            <strong>${item[0]}</strong>
+                            <span>${item[1]}</span>
+                        </div>
+                        ${item[3] ? `
+                        <svg viewBox="0 0 24 24"
+                             width="15"
+                             fill="none">
+                            <path d="m9 18 6-6-6-6"
+                                  stroke="currentColor"
+                                  stroke-width="1.7"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"/>
+                        </svg>` : ""}
+                    </button>
+                    `;
+                }).join("")
             }
-
-        };
-
-
-        list.appendChild(button);
-
-    });
-
-
-    document
-    .getElementById("overlay")
-    .classList.add("show");
-
-    document
-    .getElementById("sheet")
-    .classList.add("show");
-
+        </div>`;
+    document.getElementById("overlay")
+        .classList.add("show");
+    document.getElementById("sheet")
+        .classList.add("show");
 }
-
-
-/* =====================================================
-   CLOSE SHEET
-===================================================== */
-
-function closeSheet(){
-
-    document
-    .getElementById("overlay")
-    .classList.remove("show");
-
-    document
-    .getElementById("sheet")
-    .classList.remove("show");
-
+/* =========================================================
+   MENU ACTION
+========================================================= */
+function menuAction(action){
+    if(action === "channel"){
+        closeSheet();
+        openChannel();
+    }
+    else if(action === "group"){
+        closeSheet();
+        openGroup();
+    }
+    else if(action === "share"){
+        closeSheet();
+        shareBot();
+    }
+    else if(action === "features"){
+        openSheet("features");
+    }
+    else if(action === "notifications"){
+        openSheet("notifications");
+    }
+    else if(action === "help"){
+        openSheet("help");
+    }
+    else if(action === "community"){
+        openSheet("community");
+    }
+    else if(action === "support"){
+        openSheet("support");
+    }
+    else if(action === "about"){
+        openSheet("about");
+    }
+    else if(action === "privacy"){
+        openSheet("privacy");
+    }
+    else if(action === "settings"){
+        openSettings();
+    }
 }
-
-
-/* =====================================================
-   HOME
-===================================================== */
-
-function goHome(button){
-
-    haptic();
-
-    document
-    .querySelectorAll(".nav")
-    .forEach(
-        nav =>
-        nav.classList.remove("active")
+/* =========================================================
+   HELP CENTER
+========================================================= */
+function openHelp(){
+    document.getElementById("sheetTitle")
+        .textContent = "Help Center";
+    document.getElementById("sheetContent")
+        .innerHTML = `
+        <div class="faq">
+            <div class="faq-item">
+                <button class="faq-question"
+                        onclick="toggleFaq(this)">
+                    How do I open the bot?
+                    ${chevron()}
+                </button>
+                <div class="faq-answer">
+                    Tap the "Open Spark X Bot" button
+                    or use the Bot section from the dashboard.
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question"
+                        onclick="toggleFaq(this)">
+                    How can I get updates?
+                    ${chevron()}
+                </button>
+                <div class="faq-answer">
+                    Open the official Spark X channel
+                    from the Community section.
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question"
+                        onclick="toggleFaq(this)">
+                    Where can I get support?
+                    ${chevron()}
+                </button>
+                <div class="faq-answer">
+                    Use the Support section or join
+                    the Spark X community group.
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question"
+                        onclick="toggleFaq(this)">
+                    Is my Telegram password required?
+                    ${chevron()}
+                </button>
+                <div class="faq-answer">
+                    No. This Mini App does not ask for
+                    your Telegram password.
+                </div>
+            </div>
+        </div>`;
+    document.getElementById("overlay")
+        .classList.add("show");
+    document.getElementById("sheet")
+        .classList.add("show");
+}
+/* =========================================================
+   CHEVRON
+========================================================= */
+function chevron(){
+    return `
+    <svg viewBox="0 0 24 24"
+         width="15"
+         fill="none"
+         style="transition:.2s">
+        <path d="m6 9 6 6 6-6"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+    </svg>`;
+}
+/* =========================================================
+   FAQ
+========================================================= */
+function toggleFaq(button){
+    haptic("light");
+    const item =
+        button.parentElement;
+    item.classList.toggle("open");
+}
+/* =========================================================
+   SETTINGS
+========================================================= */
+let hapticEnabled = true;
+let notificationsEnabled = true;
+function openSettings(){
+    document.getElementById("sheetTitle")
+        .textContent = "Settings";
+    document.getElementById("sheetContent")
+        .innerHTML = `
+        <div style="padding:0 2px">
+            <div class="setting">
+                <div class="setting-left">
+                    <div class="setting-icon">
+                        ${icon("bell")}
+                    </div>
+                    <div>
+                        <div class="setting-title">
+                            Notifications
+                        </div>
+                        <div class="setting-desc">
+                            Receive app notifications
+                        </div>
+                    </div>
+                </div>
+                <button class="toggle ${
+                    notificationsEnabled ? "on" : ""
+                }"
+                onclick="toggleNotification(this)">
+                    <span></span>
+                </button>
+            </div>
+            <div class="setting">
+                <div class="setting-left">
+                    <div class="setting-icon">
+                        ${icon("bolt")}
+                    </div>
+                    <div>
+                        <div class="setting-title">
+                            Haptic Feedback
+                        </div>
+                        <div class="setting-desc">
+                            Use Telegram vibration feedback
+                        </div>
+                    </div>
+                </div>
+                <button class="toggle ${
+                    hapticEnabled ? "on" : ""
+                }"
+                onclick="toggleHaptic(this)">
+                    <span></span>
+                </button>
+            </div>
+            <div class="setting">
+                <div class="setting-left">
+                    <div class="setting-icon">
+                        ${icon("mobile")}
+                    </div>
+                    <div>
+                        <div class="setting-title">
+                            App Version
+                        </div>
+                        <div class="setting-desc">
+                            Spark X Dashboard 3.0
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="setting"
+                 onclick="openSheet('privacy')"
+                 style="cursor:pointer">
+                <div class="setting-left">
+                    <div class="setting-icon">
+                        ${icon("shield")}
+                    </div>
+                    <div>
+                        <div class="setting-title">
+                            Privacy
+                        </div>
+                        <div class="setting-desc">
+                            View privacy information
+                        </div>
+                    </div>
+                </div>
+                <span>›</span>
+            </div>
+            <div class="setting"
+                 onclick="openSheet('about')"
+                 style="cursor:pointer">
+                <div class="setting-left">
+                    <div class="setting-icon">
+                        ${icon("info")}
+                    </div>
+                    <div>
+                        <div class="setting-title">
+                            About
+                        </div>
+                        <div class="setting-desc">
+                            About Spark X
+                        </div>
+                    </div>
+                </div>
+                <span>›</span>
+            </div>
+        </div>`;
+    document.getElementById("overlay")
+        .classList.add("show");
+    document.getElementById("sheet")
+        .classList.add("show");
+}
+function toggleNotification(button){
+    notificationsEnabled =
+        !notificationsEnabled;
+    button.classList.toggle(
+        "on",
+        notificationsEnabled
     );
-
+    haptic("light");
+    showToast(
+        notificationsEnabled
+        ? "Notifications enabled"
+        : "Notifications disabled"
+    );
+}
+function toggleHaptic(button){
+    hapticEnabled =
+        !hapticEnabled;
+    button.classList.toggle(
+        "on",
+        hapticEnabled
+    );
+    showToast(
+        hapticEnabled
+        ? "Haptic feedback enabled"
+        : "Haptic feedback disabled"
+    );
+}
+/* =========================================================
+   CLOSE SHEET
+========================================================= */
+function closeSheet(){
+    document.getElementById("overlay")
+        .classList.remove("show");
+    document.getElementById("sheet")
+        .classList.remove("show");
+}
+/* =========================================================
+   NAV HOME
+========================================================= */
+function navHome(button){
+    haptic("light");
+    document.querySelectorAll(".nav-item")
+        .forEach(item =>
+            item.classList.remove("active")
+        );
     button.classList.add("active");
-
     window.scrollTo({
         top:0,
         behavior:"smooth"
     });
-
 }
-
-
-/* =====================================================
-   TOAST
-===================================================== */
-
-let toastTimer;
-
-function notify(message){
-
-    const toast =
-    document.getElementById("toast");
-
-    toast.textContent =
-    message;
-
-    toast.classList.add("show");
-
-    clearTimeout(toastTimer);
-
-    toastTimer =
-    setTimeout(
-        () => {
-            toast.classList.remove("show");
-        },
-        1800
-    );
-
-}
-
-
-/* =====================================================
-   SWIPE SHEET
-===================================================== */
-
-let startY=0;
-
-const sheet =
-document.getElementById("sheet");
-
-sheet.addEventListener(
-    "touchstart",
-    e => {
-        startY =
+/* =========================================================
+   SWIPE DOWN SHEET
+========================================================= */
+let startY = 0;
+document.getElementById("sheet")
+.addEventListener("touchstart",e=>{
+    startY =
         e.touches[0].clientY;
-    }
-);
-
-sheet.addEventListener(
-    "touchend",
-    e => {
-
-        const endY =
+});
+document.getElementById("sheet")
+.addEventListener("touchend",e=>{
+    const endY =
         e.changedTouches[0].clientY;
-
-        if(endY-startY > 70){
-            closeSheet();
-        }
-
+    if(endY - startY > 90){
+        closeSheet();
     }
-);
-
-
-/* =====================================================
+});
+/* =========================================================
    ESC
-===================================================== */
-
-document.addEventListener(
-    "keydown",
-    e => {
-
-        if(e.key === "Escape"){
-            closeSheet();
-        }
-
+========================================================= */
+document.addEventListener("keydown",e=>{
+    if(e.key === "Escape"){
+        closeSheet();
     }
-);
-
+});
+/* =========================================================
+   INIT
+========================================================= */
+loadTelegramUser();
+document.getElementById("lastChecked")
+    .textContent = "Just now";
+/* =========================================================
+   PULL TO REFRESH
+========================================================= */
+let touchStart = 0;
+window.addEventListener("touchstart",e=>{
+    touchStart =
+        window.scrollY === 0
+        ? e.touches[0].clientY
+        : 0;
+});
+window.addEventListener("touchend",e=>{
+    if(!touchStart) return;
+    const distance =
+        e.changedTouches[0].clientY -
+        touchStart;
+    if(distance > 100){
+        showToast("Dashboard refreshed");
+        document.getElementById("lastChecked")
+            .textContent = "Just now";
+        touchStart = 0;
+    }
+});
 </script>
-
 </body>
 </html>
