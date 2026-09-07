@@ -1,0 +1,2882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,
+      initial-scale=1,
+      maximum-scale=1,
+      user-scalable=no">
+
+<meta name="theme-color" content="#f7f9fc">
+
+<title>Spark X | Filter File Sharing Bot</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+
+:root{
+    --bg:#f6f8fc;
+    --card:#ffffff;
+    --text:#111522;
+    --muted:#70788b;
+    --light:#9ba3b4;
+    --border:#e8ebf2;
+
+    --primary:#635bff;
+    --blue:#3d98ff;
+    --green:#19bd78;
+    --red:#ef5b68;
+
+    --shadow:
+    0 12px 35px rgba(28,38,65,.07);
+
+    --shadow2:
+    0 6px 20px rgba(28,38,65,.055);
+
+    --radius:21px;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:
+    linear-gradient(
+        180deg,
+        #fafbfe 0%,
+        #f4f7fb 100%
+    );
+
+    color:var(--text);
+
+    font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+button{
+    font-family:inherit;
+}
+
+svg{
+    width:20px;
+    height:20px;
+
+    fill:none;
+    stroke:currentColor;
+    stroke-width:1.8;
+
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.background{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:-1;
+}
+
+.glow{
+    position:absolute;
+    width:230px;
+    height:230px;
+    border-radius:50%;
+    filter:blur(75px);
+    opacity:.16;
+    animation:float 9s ease-in-out infinite;
+}
+
+.glow.one{
+    background:#7167ff;
+    top:-100px;
+    right:-80px;
+}
+
+.glow.two{
+    background:#45aaff;
+    bottom:10%;
+    left:-100px;
+    animation-delay:-4s;
+}
+
+@keyframes float{
+    0%,100%{
+        transform:translateY(0) scale(1);
+    }
+    50%{
+        transform:translateY(-25px) scale(1.08);
+    }
+}
+
+.app{
+    width:100%;
+    max-width:520px;
+    margin:auto;
+    padding:15px 15px 115px;
+}
+
+/* HEADER */
+
+.header{
+    height:58px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:16px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.logo{
+    width:45px;
+    height:45px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:white;
+
+    border-radius:15px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #6b60ff,
+        #3d9aff
+    );
+
+    box-shadow:
+    0 9px 24px rgba(92,87,240,.22);
+}
+
+.logo svg{
+    width:23px;
+    height:23px;
+}
+
+.brand-name{
+    font-size:15px;
+    font-weight:800;
+}
+
+.verified{
+    display:inline-flex;
+
+    width:14px;
+    height:14px;
+
+    align-items:center;
+    justify-content:center;
+
+    margin-left:2px;
+
+    border-radius:50%;
+
+    color:white;
+    background:#3b91ff;
+
+    font-size:9px;
+}
+
+.brand-sub{
+    margin-top:3px;
+    color:var(--muted);
+    font-size:10px;
+}
+
+.header-actions{
+    display:flex;
+    gap:7px;
+}
+
+.icon-button{
+    width:40px;
+    height:40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:13px;
+
+    color:var(--text);
+
+    background:white;
+
+    border:1px solid var(--border);
+
+    box-shadow:var(--shadow2);
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.icon-button:active{
+    transform:scale(.91);
+}
+
+/* HERO */
+
+.hero{
+    position:relative;
+    overflow:hidden;
+
+    padding:24px 20px;
+
+    border-radius:28px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ffffff,
+        #f6f4ff 55%,
+        #f1f8ff
+    );
+
+    border:1px solid rgba(99,91,255,.10);
+
+    box-shadow:var(--shadow);
+
+    animation:appear .5s ease both;
+}
+
+.hero-orb{
+    position:absolute;
+
+    width:150px;
+    height:150px;
+
+    right:-65px;
+    top:-70px;
+
+    border-radius:50%;
+
+    background:
+    rgba(99,91,255,.10);
+
+    filter:blur(10px);
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+}
+
+.welcome{
+    color:var(--muted);
+    font-size:12px;
+    margin-bottom:8px;
+}
+
+.hero h1{
+    font-size:29px;
+    line-height:1.1;
+    letter-spacing:-1px;
+    margin-bottom:10px;
+}
+
+.hero p{
+    max-width:330px;
+
+    color:var(--muted);
+
+    font-size:13px;
+    line-height:1.55;
+}
+
+.status{
+    display:inline-flex;
+
+    align-items:center;
+    gap:7px;
+
+    margin-top:16px;
+
+    padding:7px 10px;
+
+    border-radius:20px;
+
+    color:#0fa667;
+
+    background:rgba(25,189,120,.07);
+
+    border:1px solid rgba(25,189,120,.11);
+
+    font-size:10px;
+    font-weight:700;
+}
+
+.status-dot{
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    background:var(--green);
+
+    box-shadow:
+    0 0 0 4px rgba(25,189,120,.08),
+    0 0 10px rgba(25,189,120,.45);
+
+    animation:pulse 1.7s infinite;
+}
+
+@keyframes pulse{
+    50%{
+        opacity:.4;
+    }
+}
+
+.primary{
+    width:100%;
+
+    margin-top:16px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    padding:14px;
+
+    border:none;
+    border-radius:15px;
+
+    color:white;
+
+    background:
+    linear-gradient(
+        135deg,
+        #695ef9,
+        #3c98ff
+    );
+
+    box-shadow:
+    0 10px 24px rgba(86,88,238,.20);
+
+    font-size:13px;
+    font-weight:750;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.primary:active{
+    transform:scale(.97);
+}
+
+/* STATISTICS */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:9px;
+
+    margin:13px 0 25px;
+}
+
+.stat{
+    padding:14px 7px;
+
+    text-align:center;
+
+    background:white;
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    box-shadow:var(--shadow2);
+}
+
+.stat-icon{
+    width:31px;
+    height:31px;
+
+    margin:0 auto 7px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:var(--primary);
+
+    border-radius:10px;
+
+    background:rgba(99,91,255,.07);
+}
+
+.stat-icon svg{
+    width:16px;
+    height:16px;
+}
+
+.stat-value{
+    font-size:15px;
+    font-weight:800;
+}
+
+.stat-label{
+    display:block;
+
+    margin-top:3px;
+
+    color:var(--light);
+
+    font-size:9px;
+}
+
+/* SECTION */
+
+.section{
+    margin-top:24px;
+}
+
+.section-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:11px;
+}
+
+.section-title{
+    font-size:16px;
+    font-weight:780;
+}
+
+.section-more{
+    color:var(--light);
+    font-size:10px;
+}
+
+/* MENU */
+
+.menu-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+}
+
+.menu-card{
+    position:relative;
+    overflow:hidden;
+
+    min-height:116px;
+
+    padding:16px;
+
+    background:white;
+
+    border:1px solid var(--border);
+
+    border-radius:20px;
+
+    box-shadow:var(--shadow2);
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.menu-card:active{
+    transform:scale(.97);
+}
+
+.menu-card:after{
+    content:"";
+
+    position:absolute;
+
+    width:80px;
+    height:80px;
+
+    right:-45px;
+    bottom:-45px;
+
+    border-radius:50%;
+
+    background:rgba(99,91,255,.05);
+}
+
+.menu-icon{
+    width:40px;
+    height:40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    margin-bottom:11px;
+
+    color:var(--primary);
+
+    border-radius:13px;
+
+    background:
+    linear-gradient(
+        135deg,
+        rgba(99,91,255,.10),
+        rgba(61,152,255,.07)
+    );
+}
+
+.menu-icon svg{
+    width:19px;
+    height:19px;
+}
+
+.menu-card h3{
+    font-size:13px;
+    margin-bottom:5px;
+}
+
+.menu-card p{
+    color:var(--muted);
+    font-size:10px;
+    line-height:1.4;
+}
+
+/* FEATURE LIST */
+
+.feature-list{
+    display:grid;
+    gap:9px;
+}
+
+.feature{
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    padding:14px;
+
+    background:white;
+
+    border:1px solid var(--border);
+
+    border-radius:17px;
+
+    box-shadow:var(--shadow2);
+}
+
+.feature-icon{
+    width:38px;
+    height:38px;
+
+    flex-shrink:0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:12px;
+
+    color:var(--primary);
+
+    background:rgba(99,91,255,.07);
+}
+
+.feature-text{
+    flex:1;
+}
+
+.feature-text strong{
+    display:block;
+    font-size:12px;
+}
+
+.feature-text span{
+    display:block;
+    margin-top:3px;
+    color:var(--muted);
+    font-size:9px;
+}
+
+.feature-check{
+    color:var(--green);
+}
+
+/* COMMUNITY */
+
+.community{
+    margin-top:12px;
+
+    padding:17px;
+
+    background:white;
+
+    border:1px solid var(--border);
+
+    border-radius:21px;
+
+    box-shadow:var(--shadow2);
+}
+
+.community-top{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.community-icon{
+    width:43px;
+    height:43px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:#388ff4;
+
+    border-radius:14px;
+
+    background:rgba(56,143,244,.08);
+}
+
+.community-text{
+    flex:1;
+}
+
+.community-text h3{
+    font-size:13px;
+}
+
+.community-text p{
+    margin-top:4px;
+    color:var(--muted);
+    font-size:10px;
+}
+
+.community-buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+
+    margin-top:14px;
+}
+
+.community-button{
+    padding:11px 8px;
+
+    border-radius:12px;
+
+    font-size:10px;
+    font-weight:700;
+
+    cursor:pointer;
+}
+
+.channel{
+    color:var(--primary);
+    background:rgba(99,91,255,.07);
+    border:1px solid rgba(99,91,255,.10);
+}
+
+.group{
+    color:#2789ed;
+    background:rgba(39,137,237,.07);
+    border:1px solid rgba(39,137,237,.10);
+}
+
+/* PROFILE */
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    margin-top:12px;
+
+    padding:15px;
+
+    background:white;
+
+    border:1px solid var(--border);
+
+    border-radius:20px;
+
+    box-shadow:var(--shadow2);
+}
+
+.avatar{
+    width:45px;
+    height:45px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    overflow:hidden;
+
+    flex-shrink:0;
+
+    color:#8a92a3;
+
+    border-radius:14px;
+
+    background:#edf0f5;
+}
+
+.avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.profile-info{
+    flex:1;
+}
+
+.profile-info h3{
+    font-size:13px;
+}
+
+.profile-info p{
+    margin-top:3px;
+    color:var(--muted);
+    font-size:10px;
+}
+
+.online{
+    display:flex;
+    align-items:center;
+    gap:5px;
+
+    padding:7px 9px;
+
+    color:#0fa667;
+
+    background:rgba(25,189,120,.06);
+
+    border-radius:20px;
+
+    font-size:9px;
+}
+
+/* SHARE */
+
+.share-card{
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    margin-top:12px;
+    padding:16px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #f4f2ff,
+        #eef7ff
+    );
+
+    border:1px solid rgba(99,91,255,.10);
+
+    border-radius:20px;
+
+    cursor:pointer;
+}
+
+.share-icon{
+    width:42px;
+    height:42px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:var(--primary);
+
+    background:rgba(99,91,255,.08);
+
+    border-radius:13px;
+}
+
+.share-text{
+    flex:1;
+}
+
+.share-text h3{
+    font-size:13px;
+}
+
+.share-text p{
+    margin-top:3px;
+    color:var(--muted);
+    font-size:10px;
+}
+
+.share-arrow{
+    color:var(--light);
+}
+
+/* BOTTOM NAV */
+
+.bottom-nav{
+    position:fixed;
+
+    z-index:100;
+
+    left:50%;
+    bottom:10px;
+
+    transform:translateX(-50%);
+
+    width:calc(100% - 26px);
+    max-width:500px;
+
+    height:65px;
+
+    padding:6px;
+
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+
+    background:rgba(255,255,255,.94);
+
+    border:1px solid rgba(220,224,234,.9);
+
+    border-radius:22px;
+
+    backdrop-filter:blur(22px);
+    -webkit-backdrop-filter:blur(22px);
+
+    box-shadow:
+    0 15px 45px rgba(25,35,65,.13);
+}
+
+.nav{
+    border:none;
+    background:transparent;
+
+    color:#8b93a6;
+
+    border-radius:16px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    gap:4px;
+
+    font-size:8px;
+
+    cursor:pointer;
+}
+
+.nav svg{
+    width:18px;
+    height:18px;
+}
+
+.nav.active{
+    color:var(--primary);
+    background:rgba(99,91,255,.08);
+}
+
+/* OVERLAY */
+
+.overlay{
+    position:fixed;
+    inset:0;
+
+    z-index:150;
+
+    background:rgba(20,25,40,.18);
+
+    backdrop-filter:blur(5px);
+    -webkit-backdrop-filter:blur(5px);
+
+    opacity:0;
+    pointer-events:none;
+
+    transition:.25s;
+}
+
+.overlay.show{
+    opacity:1;
+    pointer-events:auto;
+}
+
+/* SHEET */
+
+.sheet{
+    position:fixed;
+
+    z-index:160;
+
+    left:50%;
+    bottom:0;
+
+    width:100%;
+    max-width:520px;
+
+    padding:
+    12px 16px
+    calc(18px + env(safe-area-inset-bottom));
+
+    background:white;
+
+    border-radius:27px 27px 0 0;
+
+    box-shadow:
+    0 -15px 50px rgba(20,30,60,.14);
+
+    transform:translate(-50%,105%);
+
+    transition:
+    transform .32s
+    cubic-bezier(.2,.8,.2,1);
+
+    max-height:80vh;
+    overflow-y:auto;
+}
+
+.sheet.show{
+    transform:translate(-50%,0);
+}
+
+.handle{
+    width:38px;
+    height:4px;
+
+    margin:0 auto 15px;
+
+    border-radius:10px;
+
+    background:#dfe3eb;
+}
+
+.sheet-title{
+    font-size:19px;
+    font-weight:800;
+}
+
+.sheet-description{
+    margin-top:5px;
+    margin-bottom:14px;
+
+    color:var(--muted);
+
+    font-size:11px;
+    line-height:1.5;
+}
+
+.sheet-list{
+    display:grid;
+    gap:8px;
+}
+
+.sheet-item{
+    width:100%;
+
+    display:flex;
+    align-items:center;
+    gap:11px;
+
+    padding:13px;
+
+    border-radius:15px;
+
+    background:#f7f8fb;
+
+    border:1px solid #edf0f5;
+
+    color:var(--text);
+
+    text-align:left;
+
+    cursor:pointer;
+
+    transition:.18s;
+}
+
+.sheet-item:active{
+    transform:scale(.98);
+}
+
+.sheet-item-icon{
+    width:35px;
+    height:35px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    flex-shrink:0;
+
+    color:var(--primary);
+
+    background:rgba(99,91,255,.08);
+
+    border-radius:11px;
+}
+
+.sheet-item-icon svg{
+    width:17px;
+    height:17px;
+}
+
+.sheet-item-content{
+    flex:1;
+}
+
+.sheet-item-content strong{
+    display:block;
+    font-size:12px;
+}
+
+.sheet-item-content span{
+    display:block;
+    margin-top:3px;
+    color:var(--muted);
+    font-size:9px;
+    line-height:1.4;
+}
+
+.sheet-arrow{
+    color:#a4abba;
+}
+
+.close-sheet{
+    width:100%;
+
+    margin-top:10px;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:13px;
+
+    color:var(--muted);
+
+    background:#f1f3f7;
+
+    font-size:11px;
+    font-weight:700;
+
+    cursor:pointer;
+}
+
+/* TOAST */
+
+.toast{
+    position:fixed;
+
+    z-index:300;
+
+    left:50%;
+    bottom:91px;
+
+    transform:translate(-50%,20px);
+
+    opacity:0;
+
+    pointer-events:none;
+
+    padding:11px 16px;
+
+    border-radius:13px;
+
+    color:white;
+
+    background:rgba(25,29,42,.94);
+
+    box-shadow:0 10px 30px rgba(0,0,0,.16);
+
+    font-size:11px;
+
+    white-space:nowrap;
+
+    transition:.25s;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translate(-50%,0);
+}
+
+@keyframes appear{
+    from{
+        opacity:0;
+        transform:translateY(13px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@media(max-width:360px){
+
+    .app{
+        padding-left:12px;
+        padding-right:12px;
+    }
+
+    .hero h1{
+        font-size:26px;
+    }
+
+    .menu-card{
+        padding:14px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="background">
+    <div class="glow one"></div>
+    <div class="glow two"></div>
+</div>
+
+
+<main class="app">
+
+<!-- HEADER -->
+
+<header class="header">
+
+    <div class="brand">
+
+        <div class="logo">
+
+            <svg viewBox="0 0 24 24">
+                <rect x="4" y="7" width="16" height="12" rx="3"/>
+                <path d="M12 4v3"/>
+                <circle cx="9" cy="12" r="1"/>
+                <circle cx="15" cy="12" r="1"/>
+                <path d="M9 16h6"/>
+            </svg>
+
+        </div>
+
+        <div>
+
+            <div class="brand-name">
+                Spark X
+                <span class="verified">✓</span>
+            </div>
+
+            <div class="brand-sub">
+                Filter File Sharing Bot
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="header-actions">
+
+        <button
+            class="icon-button"
+            onclick="openSheet('notifications')">
+
+            <svg viewBox="0 0 24 24">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+                <path d="M10 21h4"/>
+            </svg>
+
+        </button>
+
+
+        <button
+            class="icon-button"
+            onclick="openSheet('allMenu')">
+
+            <svg viewBox="0 0 24 24">
+                <circle cx="5" cy="12" r="1"/>
+                <circle cx="12" cy="12" r="1"/>
+                <circle cx="19" cy="12" r="1"/>
+            </svg>
+
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <div class="hero-orb"></div>
+
+    <div class="hero-content">
+
+        <div class="welcome" id="welcome">
+            Welcome back
+        </div>
+
+        <h1>
+            Your Telegram<br>
+            assistant.
+        </h1>
+
+        <p>
+            Simple, fast and reliable.
+            Everything you need is available
+            inside Telegram.
+        </p>
+
+        <div class="status">
+            <span class="status-dot"></span>
+            Bot is Online
+        </div>
+
+
+        <button
+            class="primary"
+            onclick="openBot()">
+
+            <svg viewBox="0 0 24 24">
+                <path d="M22 2 11 13"/>
+                <path d="m22 2-7 20-4-9-9-4Z"/>
+            </svg>
+
+            Open Spark X Bot
+
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- STATS -->
+
+<section class="stats">
+
+    <div class="stat">
+
+        <div class="stat-icon">
+
+            <svg viewBox="0 0 24 24">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+
+        </div>
+
+        <div class="stat-value">
+            10K+
+        </div>
+
+        <span class="stat-label">
+            Users
+        </span>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="stat-icon">
+
+            <svg viewBox="0 0 24 24">
+                <path d="M13 2 3 14h9l-1 8 10-12h-9Z"/>
+            </svg>
+
+        </div>
+
+        <div class="stat-value">
+            24/7
+        </div>
+
+        <span class="stat-label">
+            Available
+        </span>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="stat-icon">
+
+            <svg viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/>
+                <path d="m9 12 2 2 4-4"/>
+            </svg>
+
+        </div>
+
+        <div class="stat-value">
+            99.9%
+        </div>
+
+        <span class="stat-label">
+            Uptime
+        </span>
+
+    </div>
+
+</section>
+
+
+<!-- QUICK ACCESS -->
+
+<section class="section">
+
+    <div class="section-header">
+
+        <div class="section-title">
+            Quick Access
+        </div>
+
+        <div class="section-more">
+            Explore
+        </div>
+
+    </div>
+
+
+    <div class="menu-grid">
+
+
+        <!-- FEATURES -->
+
+        <div
+            class="menu-card"
+            onclick="openSheet('features')">
+
+            <div class="menu-icon">
+
+                <svg viewBox="0 0 24 24">
+                    <path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8Z"/>
+                    <path d="m19 15 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8Z"/>
+                </svg>
+
+            </div>
+
+            <h3>
+                Features
+            </h3>
+
+            <p>
+                Explore Spark X capabilities.
+            </p>
+
+        </div>
+
+
+        <!-- BOT STATUS -->
+
+        <div
+            class="menu-card"
+            onclick="openSheet('botStatus')">
+
+            <div class="menu-icon">
+
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 3v3"/>
+                    <rect x="4" y="7" width="16" height="12" rx="3"/>
+                    <circle cx="9" cy="12" r="1"/>
+                    <circle cx="15" cy="12" r="1"/>
+                    <path d="M9 16h6"/>
+                </svg>
+
+            </div>
+
+            <h3>
+                Bot Status
+            </h3>
+
+            <p>
+                Check current service status.
+            </p>
+
+        </div>
+
+
+        <!-- STATISTICS -->
+
+        <div
+            class="menu-card"
+            onclick="openSheet('statistics')">
+
+            <div class="menu-icon">
+
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 19V5"/>
+                    <path d="M4 19h16"/>
+                    <path d="m7 15 4-4 3 2 5-6"/>
+                </svg>
+
+            </div>
+
+            <h3>
+                Statistics
+            </h3>
+
+            <p>
+                View service information.
+            </p>
+
+        </div>
+
+
+        <!-- HELP -->
+
+        <div
+            class="menu-card"
+            onclick="openSheet('help')">
+
+            <div class="menu-icon">
+
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9"/>
+                    <path d="M9.5 9a2.5 2.5 0 1 1 4.2 1.8c-1 .7-1.7 1.2-1.7 2.7"/>
+                    <path d="M12 17h.01"/>
+                </svg>
+
+            </div>
+
+            <h3>
+                Help Center
+            </h3>
+
+            <p>
+                Find answers and guides.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FEATURE LIST -->
+
+<section class="section">
+
+    <div class="section-header">
+
+        <div class="section-title">
+            What's Included
+        </div>
+
+        <div class="section-more">
+            Spark X
+        </div>
+
+    </div>
+
+
+    <div class="feature-list">
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 12a8 8 0 0 1 16 0"/>
+                    <path d="M4 12v5"/>
+                    <path d="M20 12v5"/>
+                    <rect x="3" y="16" width="4" height="5" rx="2"/>
+                    <rect x="17" y="16" width="4" height="5" rx="2"/>
+                </svg>
+
+            </div>
+
+            <div class="feature-text">
+                <strong>
+                    Fast & Reliable
+                </strong>
+
+                <span>
+                    Designed for a smooth Telegram experience.
+                </span>
+            </div>
+
+            <div class="feature-check">
+                ✓
+            </div>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 6h16"/>
+                    <path d="M4 12h16"/>
+                    <path d="M4 18h16"/>
+                </svg>
+
+            </div>
+
+            <div class="feature-text">
+
+                <strong>
+                    Smart Filtering
+                </strong>
+
+                <span>
+                    Organized and efficient file discovery.
+                </span>
+
+            </div>
+
+            <div class="feature-check">
+                ✓
+            </div>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 3v3"/>
+                    <rect x="4" y="7" width="16" height="12" rx="3"/>
+                    <circle cx="9" cy="12" r="1"/>
+                    <circle cx="15" cy="12" r="1"/>
+                    <path d="M9 16h6"/>
+                </svg>
+
+            </div>
+
+            <div class="feature-text">
+
+                <strong>
+                    Telegram Native
+                </strong>
+
+                <span>
+                    Built specifically for Telegram.
+                </span>
+
+            </div>
+
+            <div class="feature-check">
+                ✓
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- COMMUNITY -->
+
+<section class="community">
+
+    <div class="community-top">
+
+        <div class="community-icon">
+
+            <svg viewBox="0 0 24 24">
+                <path d="M21 3 3 10l7 3 3 7 8-17Z"/>
+                <path d="m10 13 4-4"/>
+            </svg>
+
+        </div>
+
+        <div class="community-text">
+
+            <h3>
+                Stay Connected
+            </h3>
+
+            <p>
+                Get updates and join the community.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="community-buttons">
+
+        <button
+            class="community-button channel"
+            onclick="joinChannel()">
+
+            Updated Channel
+
+        </button>
+
+        <button
+            class="community-button group"
+            onclick="joinGroup()">
+
+            Community Group
+
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- SHARE -->
+
+<section
+    class="share-card"
+    onclick="shareBot()">
+
+    <div class="share-icon">
+
+        <svg viewBox="0 0 24 24">
+            <circle cx="18" cy="5" r="3"/>
+            <circle cx="6" cy="12" r="3"/>
+            <circle cx="18" cy="19" r="3"/>
+            <path d="m8.6 13.5 6.8 4"/>
+            <path d="m15.4 6.5-6.8 4"/>
+        </svg>
+
+    </div>
+
+    <div class="share-text">
+
+        <h3>
+            Share Spark X
+        </h3>
+
+        <p>
+            Invite your friends to use the bot.
+        </p>
+
+    </div>
+
+    <div class="share-arrow">
+
+        <svg viewBox="0 0 24 24">
+            <path d="m9 18 6-6-6-6"/>
+        </svg>
+
+    </div>
+
+</section>
+
+
+<!-- PROFILE -->
+
+<section class="profile">
+
+    <div
+        class="avatar"
+        id="avatar">
+
+        <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 21a8 8 0 0 1 16 0"/>
+        </svg>
+
+    </div>
+
+    <div class="profile-info">
+
+        <h3 id="userName">
+            Telegram User
+        </h3>
+
+        <p id="username">
+            @username
+        </p>
+
+    </div>
+
+    <div class="online">
+
+        <span class="status-dot"></span>
+
+        Online
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- BOTTOM NAV -->
+
+<nav class="bottom-nav">
+
+    <button
+        class="nav active"
+        onclick="goHome(this)">
+
+        <svg viewBox="0 0 24 24">
+            <path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/>
+            <path d="M9 22v-8h6v8"/>
+        </svg>
+
+        Home
+
+    </button>
+
+
+    <button
+        class="nav"
+        onclick="openSheet('features')">
+
+        <svg viewBox="0 0 24 24">
+            <path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8Z"/>
+        </svg>
+
+        Features
+
+    </button>
+
+
+    <button
+        class="nav"
+        onclick="openBot()">
+
+        <svg viewBox="0 0 24 24">
+            <path d="M22 2 11 13"/>
+            <path d="m22 2-7 20-4-9-9-4Z"/>
+        </svg>
+
+        Bot
+
+    </button>
+
+
+    <button
+        class="nav"
+        onclick="openSheet('community')">
+
+        <svg viewBox="0 0 24 24">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+
+        Community
+
+    </button>
+
+
+    <button
+        class="nav"
+        onclick="openSheet('settings')">
+
+        <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.5 1.5-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-2.1v-.2a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1-1.5-1.5.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H7v-2.1h.2a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1 1.5-1.5.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6V4h2.1v.2a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.5 1.5-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2V12h-.2a1.7 1.7 0 0 0-1.6 1Z"/>
+        </svg>
+
+        Settings
+
+    </button>
+
+</nav>
+
+
+<!-- OVERLAY -->
+
+<div
+    class="overlay"
+    id="overlay"
+    onclick="closeSheet()">
+</div>
+
+
+<!-- SHEET -->
+
+<section
+    class="sheet"
+    id="sheet">
+
+    <div class="handle"></div>
+
+    <h2
+        class="sheet-title"
+        id="sheetTitle">
+        Menu
+    </h2>
+
+    <p
+        class="sheet-description"
+        id="sheetDescription">
+        Spark X
+    </p>
+
+    <div
+        class="sheet-list"
+        id="sheetList">
+    </div>
+
+    <button
+        class="close-sheet"
+        onclick="closeSheet()">
+
+        Close
+
+    </button>
+
+</section>
+
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast">
+</div>
+
+
+<script>
+
+/* =====================================================
+   CONFIG
+===================================================== */
+
+const BOT_USERNAME = "SparkXMoviesBot";
+
+const CHANNEL_URL =
+"https://t.me/+vLdb0RztiqsxN2Q1";
+
+const GROUP_URL =
+"https://t.me/+GfXqqkprPo01NDdl";
+
+const BOT_URL =
+"https://t.me/" + BOT_USERNAME;
+
+
+/* =====================================================
+   TELEGRAM
+===================================================== */
+
+const tg =
+window.Telegram?.WebApp;
+
+if(tg){
+
+    tg.ready();
+
+    tg.expand();
+
+    try{
+        tg.setHeaderColor("#f6f8fc");
+        tg.setBackgroundColor("#f6f8fc");
+    }catch(e){}
+
+    const user =
+    tg.initDataUnsafe?.user;
+
+    if(user){
+
+        const first =
+        user.first_name || "User";
+
+        const last =
+        user.last_name || "";
+
+        const name =
+        `${first} ${last}`.trim();
+
+        document
+        .getElementById("welcome")
+        .textContent =
+        `Welcome, ${first}`;
+
+        document
+        .getElementById("userName")
+        .textContent =
+        name;
+
+        document
+        .getElementById("username")
+        .textContent =
+        user.username
+        ? `@${user.username}`
+        : "Telegram user";
+
+        if(user.photo_url){
+
+            document
+            .getElementById("avatar")
+            .innerHTML =
+            `<img src="${user.photo_url}" alt="Profile">`;
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   HAPTIC
+===================================================== */
+
+function haptic(type="light"){
+
+    try{
+
+        tg?.HapticFeedback
+        ?.impactOccurred(type);
+
+    }catch(e){}
+
+}
+
+
+/* =====================================================
+   BOT
+===================================================== */
+
+function openBot(){
+
+    haptic("medium");
+
+    openTelegram(BOT_URL);
+
+}
+
+
+/* =====================================================
+   TELEGRAM OPEN
+===================================================== */
+
+function openTelegram(url){
+
+    if(tg){
+
+        try{
+
+            tg.openTelegramLink(url);
+
+            return;
+
+        }catch(e){}
+
+    }
+
+    window.open(
+        url,
+        "_blank"
+    );
+
+}
+
+
+/* =====================================================
+   CHANNEL
+===================================================== */
+
+function joinChannel(){
+
+    haptic();
+
+    openTelegram(
+        CHANNEL_URL
+    );
+
+}
+
+
+/* =====================================================
+   GROUP
+===================================================== */
+
+function joinGroup(){
+
+    haptic();
+
+    openTelegram(
+        GROUP_URL
+    );
+
+}
+
+
+/* =====================================================
+   SHARE
+===================================================== */
+
+function shareBot(){
+
+    haptic("medium");
+
+    const shareText =
+    "Check out Spark X | Filter File Sharing Bot";
+
+    const shareUrl =
+    `https://t.me/share/url?url=${encodeURIComponent(BOT_URL)}&text=${encodeURIComponent(shareText)}`;
+
+    openTelegram(shareUrl);
+
+}
+
+
+/* =====================================================
+   COPY BOT USERNAME
+===================================================== */
+
+function copyBot(){
+
+    navigator.clipboard
+    ?.writeText(
+        "@" + BOT_USERNAME
+    );
+
+    notify(
+        "Bot username copied"
+    );
+
+}
+
+
+/* =====================================================
+   SHEET ICONS
+===================================================== */
+
+const icons = {
+
+    bot: `
+        <svg viewBox="0 0 24 24">
+            <path d="M12 3v3"/>
+            <rect x="4" y="7" width="16" height="12" rx="3"/>
+            <circle cx="9" cy="12" r="1"/>
+            <circle cx="15" cy="12" r="1"/>
+            <path d="M9 16h6"/>
+        </svg>
+    `,
+
+    spark: `
+        <svg viewBox="0 0 24 24">
+            <path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8Z"/>
+        </svg>
+    `,
+
+    chart: `
+        <svg viewBox="0 0 24 24">
+            <path d="M4 19V5"/>
+            <path d="M4 19h16"/>
+            <path d="m7 15 4-4 3 2 5-6"/>
+        </svg>
+    `,
+
+    help: `
+        <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M9.5 9a2.5 2.5 0 1 1 4.2 1.8c-1 .7-1.7 1.2-1.7 2.7"/>
+            <path d="M12 17h.01"/>
+        </svg>
+    `,
+
+    update: `
+        <svg viewBox="0 0 24 24">
+            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+            <path d="M10 21h4"/>
+        </svg>
+    `,
+
+    users: `
+        <svg viewBox="0 0 24 24">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+    `,
+
+    share: `
+        <svg viewBox="0 0 24 24">
+            <circle cx="18" cy="5" r="3"/>
+            <circle cx="6" cy="12" r="3"/>
+            <circle cx="18" cy="19" r="3"/>
+            <path d="m8.6 13.5 6.8 4"/>
+            <path d="m15.4 6.5-6.8 4"/>
+        </svg>
+    `,
+
+    settings: `
+        <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19 15a2 2 0 0 0 .4 2.2l.1.1-1.5 1.5-.1-.1a2 2 0 0 0-2.2-.4 2 2 0 0 0-1.2 1.8v.2h-2.1v-.2a2 2 0 0 0-1.2-1.8 2 2 0 0 0-2.2.4l-.1.1-1.5-1.5.1-.1A2 2 0 0 0 8 15a2 2 0 0 0-1.8-1.2H6v-2.1h.2A2 2 0 0 0 8 10.5a2 2 0 0 0-.4-2.2l-.1-.1L9 6.7l.1.1a2 2 0 0 0 2.2.4 2 2 0 0 0 1.2-1.8v-.2h2.1v.2a2 2 0 0 0 1.2 1.8 2 2 0 0 0 2.2-.4l.1-.1 1.5 1.5-.1.1A2 2 0 0 0 19 10.5a2 2 0 0 0 1.8 1.2h.2v2.1h-.2A2 2 0 0 0 19 15Z"/>
+        </svg>
+    `,
+
+    shield: `
+        <svg viewBox="0 0 24 24">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/>
+            <path d="m9 12 2 2 4-4"/>
+        </svg>
+    `,
+
+    info: `
+        <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 11v5"/>
+            <path d="M12 8h.01"/>
+        </svg>
+    `,
+
+    language: `
+        <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M3 12h18"/>
+            <path d="M12 3a14 14 0 0 1 0 18"/>
+            <path d="M12 3a14 14 0 0 0 0 18"/>
+        </svg>
+    `,
+
+    star: `
+        <svg viewBox="0 0 24 24">
+            <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9Z"/>
+        </svg>
+    `,
+
+    support: `
+        <svg viewBox="0 0 24 24">
+            <path d="M21 11.5a8.5 8.5 0 0 1-9 8.5 9 9 0 0 1-4-.9L3 21l1.9-4.5A8.3 8.3 0 0 1 3 11.5a8.5 8.5 0 0 1 9-8.5 8.5 8.5 0 0 1 9 8.5Z"/>
+        </svg>
+    `,
+
+    copy: `
+        <svg viewBox="0 0 24 24">
+            <rect x="8" y="8" width="12" height="12" rx="2"/>
+            <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>
+        </svg>
+    `
+
+};
+
+
+/* =====================================================
+   SHEET DATA
+===================================================== */
+
+const menus = {
+
+
+    features:{
+
+        title:"Spark X Features",
+
+        description:
+        "Everything available in your Telegram assistant.",
+
+        items:[
+
+            [
+                "spark",
+                "Smart Auto Filter",
+                "Automatic filtering for a smoother experience."
+            ],
+
+            [
+                "bot",
+                "Fast File Access",
+                "Designed for quick file discovery."
+            ],
+
+            [
+                "shield",
+                "Reliable Service",
+                "Built for a stable Telegram experience."
+            ],
+
+            [
+                "update",
+                "Regular Improvements",
+                "New improvements can be added over time."
+            ]
+
+        ]
+
+    },
+
+
+    botStatus:{
+
+        title:"Bot Status",
+
+        description:
+        "Current Spark X service information.",
+
+        items:[
+
+            [
+                "bot",
+                "Service Status",
+                "Spark X is currently online."
+            ],
+
+            [
+                "shield",
+                "System",
+                "All primary services are operational."
+            ],
+
+            [
+                "chart",
+                "Availability",
+                "Service is designed for 24/7 availability."
+            ]
+
+        ]
+
+    },
+
+
+    statistics:{
+
+        title:"Statistics",
+
+        description:
+        "General Spark X dashboard information.",
+
+        items:[
+
+            [
+                "users",
+                "Users",
+                "10K+ registered users."
+            ],
+
+            [
+                "bot",
+                "Availability",
+                "24/7 service availability."
+            ],
+
+            [
+                "shield",
+                "Uptime",
+                "99.9% service uptime target."
+            ],
+
+            [
+                "chart",
+                "Performance",
+                "Fast and lightweight Telegram experience."
+            ]
+
+        ]
+
+    },
+
+
+    help:{
+
+        title:"Help Center",
+
+        description:
+        "Find quick answers about Spark X.",
+
+        items:[
+
+            [
+                "bot",
+                "How to Start",
+                "Open the Spark X bot and follow its instructions.",
+                openBot
+            ],
+
+            [
+                "spark",
+                "How Filtering Works",
+                "Use the bot's available search and filtering options."
+            ],
+
+            [
+                "support",
+                "Need Assistance?",
+                "Open the support section for help.",
+                () => openSheet("support")
+            ]
+
+        ]
+
+    },
+
+
+    updates:{
+
+        title:"Latest Updates",
+
+        description:
+        "Stay connected with Spark X announcements.",
+
+        items:[
+
+            [
+                "update",
+                "Updated Channel",
+                "Open the official update channel.",
+                joinChannel
+            ],
+
+            [
+                "users",
+                "Community Group",
+                "Join the Spark X community.",
+                joinGroup
+            ]
+
+        ]
+
+    },
+
+
+    community:{
+
+        title:"Community",
+
+        description:
+        "Connect with Spark X.",
+
+        items:[
+
+            [
+                "update",
+                "Updated Channel",
+                "Latest announcements and updates.",
+                joinChannel
+            ],
+
+            [
+                "users",
+                "Community Group",
+                "Join the community.",
+                joinGroup
+            ],
+
+            [
+                "share",
+                "Share Spark X",
+                "Invite your friends.",
+                shareBot
+            ]
+
+        ]
+
+    },
+
+
+    support:{
+
+        title:"Support",
+
+        description:
+        "Choose how you want to get assistance.",
+
+        items:[
+
+            [
+                "users",
+                "Community Group",
+                "Ask questions in the community.",
+                joinGroup
+            ],
+
+            [
+                "update",
+                "Updates Channel",
+                "Check the latest announcements.",
+                joinChannel
+            ],
+
+            [
+                "bot",
+                "Open Bot",
+                "Return to Spark X.",
+                openBot
+            ]
+
+        ]
+
+    },
+
+
+    settings:{
+
+        title:"Settings",
+
+        description:
+        "Customize your Mini App experience.",
+
+        items:[
+
+            [
+                "language",
+                "Language",
+                "Language selection can be connected here."
+            ],
+
+            [
+                "info",
+                "App Information",
+                "View Spark X information.",
+                () => openSheet("about")
+            ],
+
+            [
+                "shield",
+                "Privacy",
+                "View privacy information.",
+                () => openSheet("privacy")
+            ],
+
+            [
+                "star",
+                "Rate Spark X",
+                "Share your feedback."
+            ]
+
+        ]
+
+    },
+
+
+    privacy:{
+
+        title:"Privacy",
+
+        description:
+        "Basic information about this Mini App.",
+
+        items:[
+
+            [
+                "shield",
+                "Telegram Data",
+                "The Mini App can read basic Telegram profile information provided by Telegram."
+            ],
+
+            [
+                "shield",
+                "No Password Required",
+                "Never enter your Telegram password inside the Mini App."
+            ],
+
+            [
+                "info",
+                "Stay Safe",
+                "Only use official Spark X links."
+            ]
+
+        ]
+
+    },
+
+
+    about:{
+
+        title:"About Spark X",
+
+        description:
+        "Information about this Mini App.",
+
+        items:[
+
+            [
+                "bot",
+                "Name",
+                "Spark X | Filter File Sharing Bot"
+            ],
+
+            [
+                "info",
+                "Username",
+                "@SparkXMoviesBot"
+            ],
+
+            [
+                "update",
+                "Updated Channel",
+                "Official Spark X update channel.",
+                joinChannel
+            ],
+
+            [
+                "users",
+                "Community",
+                "Official Spark X community.",
+                joinGroup
+            ]
+
+        ]
+
+    },
+
+
+    notifications:{
+
+        title:"Notifications",
+
+        description:
+        "Your Spark X notification center.",
+
+        items:[
+
+            [
+                "update",
+                "No New Notifications",
+                "You're all caught up."
+            ],
+
+            [
+                "shield",
+                "Service Online",
+                "Spark X is currently available."
+            ]
+
+        ]
+
+    },
+
+
+    allMenu:{
+
+        title:"Spark X Menu",
+
+        description:
+        "All important sections in one place.",
+
+        items:[
+
+            [
+                "spark",
+                "Features",
+                "Explore Spark X features.",
+                () => openSheet("features")
+            ],
+
+            [
+                "bot",
+                "Bot Status",
+                "Check service status.",
+                () => openSheet("botStatus")
+            ],
+
+            [
+                "chart",
+                "Statistics",
+                "View dashboard statistics.",
+                () => openSheet("statistics")
+            ],
+
+            [
+                "update",
+                "Updates",
+                "Latest announcements.",
+                () => openSheet("updates")
+            ],
+
+            [
+                "users",
+                "Community",
+                "Join the community.",
+                () => openSheet("community")
+            ],
+
+            [
+                "support",
+                "Support",
+                "Get assistance.",
+                () => openSheet("support")
+            ],
+
+            [
+                "settings",
+                "Settings",
+                "Customize your experience.",
+                () => openSheet("settings")
+            ],
+
+            [
+                "info",
+                "About",
+                "About Spark X.",
+                () => openSheet("about")
+            ]
+
+        ]
+
+    }
+
+};
+
+
+/* =====================================================
+   OPEN SHEET
+===================================================== */
+
+function openSheet(type){
+
+    haptic();
+
+    const data =
+    menus[type];
+
+    if(!data)return;
+
+    const title =
+    document.getElementById("sheetTitle");
+
+    const description =
+    document.getElementById("sheetDescription");
+
+    const list =
+    document.getElementById("sheetList");
+
+    title.textContent =
+    data.title;
+
+    description.textContent =
+    data.description;
+
+    list.innerHTML="";
+
+
+    data.items.forEach(item => {
+
+        const [
+            icon,
+            titleText,
+            descriptionText,
+            action
+        ] = item;
+
+
+        const button =
+        document.createElement("button");
+
+        button.className =
+        "sheet-item";
+
+
+        button.innerHTML = `
+
+            <div class="sheet-item-icon">
+                ${icons[icon] || icons.info}
+            </div>
+
+            <div class="sheet-item-content">
+
+                <strong>
+                    ${titleText}
+                </strong>
+
+                <span>
+                    ${descriptionText}
+                </span>
+
+            </div>
+
+            <div class="sheet-arrow">
+
+                <svg viewBox="0 0 24 24">
+                    <path d="m9 18 6-6-6-6"/>
+                </svg>
+
+            </div>
+
+        `;
+
+
+        button.onclick = () => {
+
+            haptic();
+
+            if(action){
+
+                action();
+
+            }else{
+
+                notify(
+                    `${titleText} selected`
+                );
+
+            }
+
+        };
+
+
+        list.appendChild(button);
+
+    });
+
+
+    document
+    .getElementById("overlay")
+    .classList.add("show");
+
+    document
+    .getElementById("sheet")
+    .classList.add("show");
+
+}
+
+
+/* =====================================================
+   CLOSE SHEET
+===================================================== */
+
+function closeSheet(){
+
+    document
+    .getElementById("overlay")
+    .classList.remove("show");
+
+    document
+    .getElementById("sheet")
+    .classList.remove("show");
+
+}
+
+
+/* =====================================================
+   HOME
+===================================================== */
+
+function goHome(button){
+
+    haptic();
+
+    document
+    .querySelectorAll(".nav")
+    .forEach(
+        nav =>
+        nav.classList.remove("active")
+    );
+
+    button.classList.add("active");
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+let toastTimer;
+
+function notify(message){
+
+    const toast =
+    document.getElementById("toast");
+
+    toast.textContent =
+    message;
+
+    toast.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer =
+    setTimeout(
+        () => {
+            toast.classList.remove("show");
+        },
+        1800
+    );
+
+}
+
+
+/* =====================================================
+   SWIPE SHEET
+===================================================== */
+
+let startY=0;
+
+const sheet =
+document.getElementById("sheet");
+
+sheet.addEventListener(
+    "touchstart",
+    e => {
+        startY =
+        e.touches[0].clientY;
+    }
+);
+
+sheet.addEventListener(
+    "touchend",
+    e => {
+
+        const endY =
+        e.changedTouches[0].clientY;
+
+        if(endY-startY > 70){
+            closeSheet();
+        }
+
+    }
+);
+
+
+/* =====================================================
+   ESC
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    e => {
+
+        if(e.key === "Escape"){
+            closeSheet();
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
